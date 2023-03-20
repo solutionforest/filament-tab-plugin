@@ -1,0 +1,15 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Filament\Widgets;
+use SolutionForest\TabLayoutPlugin\Widgets\TabsWidget as BaseWidget;
+use SolutionForest\TabLayoutPlugin\Components;
+
+class {{ class }} extends BaseWidget
+{
+    protected function schema(): array
+    {
+        return [];
+    }
+}
