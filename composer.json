@@ -4,12 +4,12 @@
     "keywords": [
         "Solution Forest",
         "laravel",
-        "grid-layout-plugin"
+        "tab-layout-plugin"
     ],
-    "homepage": "https://github.com/solution-forest/grid-layout-plugin",
+    "homepage": "https://github.com/solution-forest/tab-layout-plugin",
     "support": {
-        "issues": "https://github.com/solution-forest/grid-layout-plugin/issues",
-        "source": "https://github.com/solution-forest/grid-layout-plugin"
+        "issues": "https://github.com/solution-forest/tab-layout-plugin/issues",
+        "source": "https://github.com/solution-forest/tab-layout-plugin"
     },
     "license": "MIT",
     "authors": [{
@@ -42,19 +42,8 @@
             "SolutionForest\\TabLayoutPlugin\\": "src"
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "SolutionForest\\TabLayoutPlugin\\Tests\\": "tests"
-        }
-    },
     "scripts": {
-        "pint": "vendor/bin/pint",
-        "test:pest": "vendor/bin/pest",
-        "test:phpstan": "vendor/bin/phpstan analyse",
-        "test": [
-            "@test:pest",
-            "@test:phpstan"
-        ]
+        "pint": "vendor/bin/pint"
     },
     "config": {
         "sort-packages": true,
@@ -68,10 +57,7 @@
         "laravel": {
             "providers": [
                 "SolutionForest\\TabLayoutPlugin\\TabLayoutPluginServiceProvider"
-            ],
-            "aliases": {
-                "GridLayoutPlugin": "SolutionForest\\TabLayoutPlugin\\Facades\\TabLayoutPlugin"
-            }
+            ]
         }
     },
     "minimum-stability": "dev",

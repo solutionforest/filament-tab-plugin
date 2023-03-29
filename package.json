@@ -1,11 +1,11 @@
 {
     "private": true,
     "scripts": {
-        "dev:styles": "npx tailwindcss -i resources/css/plugin.css -o resources/dist/grid-layout-plugin.css --postcss --watch",
-        "dev:scripts": "esbuild resources/js/plugin.js --bundle --sourcemap=inline --outfile=resources/dist/grid-layout-plugin.js --watch",
-        "build:styles": "npx tailwindcss -i resources/css/plugin.css -o resources/dist/grid-layout-plugin.css --postcss --minify && npm run purge",
-        "build:scripts": "esbuild resources/js/plugin.js --bundle --minify --outfile=resources/dist/grid-layout-plugin.js",
-        "purge": "filament-purge -i resources/dist/grid-layout-plugin.css -o resources/dist/grid-layout-plugin.css",
+        "dev:styles": "npx tailwindcss -i resources/css/plugin.css -o resources/dist/tab-layout-plugin.css --postcss --watch",
+        "dev:scripts": "esbuild resources/js/plugin.js --bundle --sourcemap=inline --outfile=resources/dist/tab-layout-plugin.js --watch",
+        "build:styles": "npx tailwindcss -i resources/css/plugin.css -o resources/dist/tab-layout-plugin.css --postcss --minify && npm run purge",
+        "build:scripts": "esbuild resources/js/plugin.js --bundle --minify --outfile=resources/dist/tab-layout-plugin.js",
+        "purge": "filament-purge -i resources/dist/tab-layout-plugin.css -o resources/dist/tab-layout-plugin.css",
         "dev": "npm-run-all --parallel dev:*",
         "build": "npm-run-all build:*"
     },
