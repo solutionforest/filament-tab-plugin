@@ -66,20 +66,13 @@ Tabs may have an icon and badge, which you can set using the icon() and badge() 
 
 ## Changelog
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+Please see [CHANGELOG](../../releases) for more information on what has changed recently.
 
-## Contributing
-
-Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 
 ## Security Vulnerabilities
 
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
+If you discover any security related issues, please email info+package@solutionforest.net instead of using the issue tracker.
 
-## Credits
-
-- [Carly](https://github.com/n/a)
-- [All Contributors](../../contributors)
 
 ## License
 
