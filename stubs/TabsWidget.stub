@@ -16,11 +16,11 @@ class {{ class }} extends BaseWidget
             //     ->icon('heroicon-o-bell')
             //     ->badge('39')
             //     ->schema([
-            //         new Filament\Widgets\AccountWidget(),
+            //         new \Filament\Widgets\AccountWidget(),
             //     ]),
             // TabLayoutTab::make('Label 2')
             //     ->schema([
-            //         new Filament\Widgets\FilamentInfoWidget(),
+            //         new \Filament\Widgets\FilamentInfoWidget(),
             //     ]),
 
         ];
