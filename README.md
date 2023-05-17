@@ -7,6 +7,8 @@
 
 This plugin creates widgets with tab layout for Filament Admin.
 
+![filament-tab-1](https://github.com/solutionforest/filament-tab-plugin/assets/68525320/0dd61497-1c22-474c-b74a-75700df51292)
+
 ## Installation
 
 You can install the package via composer:
@@ -30,21 +32,21 @@ php artisan make:filament-tab-widget DummyTabs
 
 You will then define the child component 'schema()' to display inside:
 ```php
+use SolutionForest\TabLayoutPlugin\Components\Tabs\Tab as TabLayoutTab;
 use SolutionForest\TabLayoutPlugin\Widgets\TabsWidget as BaseWidget;
-use SolutionForest\TabLayoutPlugin\Components\Tabs\Tab;
 
 class DummyTabs extends BaseWidget
 {
     protected function schema(): array
     {
         return [
-            Tab::make('Label 1')
-            ->icon('heroicon-o-bell') 
-            ->badge('39')
+            TabLayoutTab::make('Label 1')
+                ->icon('heroicon-o-bell') 
+                ->badge('39')
                 ->schema([
                     // ...
                 ]),
-            Tab::make('Label 2')
+            TabLayoutTab::make('Label 2')
                 ->schema([
                     // ...
                 ]),
@@ -53,14 +55,14 @@ class DummyTabs extends BaseWidget
 }
 ```
 
-Tabs may have an icon and badge, which you can set using the icon() and badge() methods:
+Tabs may have an icon and badge, which you can set using the `icon()` and `badge()` methods:
 ```php
     Tab::make('Label 1')
-    ->icon('heroicon-o-bell') 
-    ->badge('39')
-    ->schema([
-        // ...
-    ]),
+        ->icon('heroicon-o-bell') 
+        ->badge('39')
+        ->schema([
+            // ...
+        ]),
 ```
 
 
