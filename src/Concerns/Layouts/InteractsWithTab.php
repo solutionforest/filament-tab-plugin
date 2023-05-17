@@ -2,20 +2,20 @@
 
 namespace SolutionForest\TabLayoutPlugin\Concerns\Layouts;
 
-use SolutionForest\TabLayoutPlugin\Components;
+use SolutionForest\TabLayoutPlugin\Components\Tabs;
 
 trait InteractsWithTab
 {
     protected bool $hasMounted = false;
 
-    protected Components\Tabs $tabs;
+    protected Tabs $tabs;
 
     public function mountInteractsWithTab(): void
     {
         $this->tabs = $this->getTabs();
     }
 
-    public static function tabs(Components\Tabs $tabs): Components\Tabs
+    public static function tabs(Tabs $tabs): Tabs
     {
         return $tabs;
     }
@@ -25,9 +25,9 @@ trait InteractsWithTab
         return [];
     }
 
-    public function getTabs() : Components\Tabs
+    public function getTabs(): Tabs
     {
-        return Components\Tabs::make()
+        return Tabs::make()
             ->tabs($this->schema());
     }
 }

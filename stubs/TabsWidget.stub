@@ -2,14 +2,28 @@
 
 namespace {{ namespace }};
 
-use App\Filament\Widgets;
+use SolutionForest\TabLayoutPlugin\Components\Tabs\Tab as TabLayoutTab;
 use SolutionForest\TabLayoutPlugin\Widgets\TabsWidget as BaseWidget;
-use SolutionForest\TabLayoutPlugin\Components;
 
 class {{ class }} extends BaseWidget
 {
     protected function schema(): array
     {
-        return [];
+        return [
+
+            // SAMPLE CODE, CAN DELETE
+            // TabLayoutTab::make('Label 1')
+            //     ->icon('heroicon-o-bell')
+            //     ->badge('39')
+            //     ->schema([
+            //         new Filament\Widgets\AccountWidget(),
+            //     ]),
+            // TabLayoutTab::make('Label 2')
+            //     ->schema([
+            //         new Filament\Widgets\FilamentInfoWidget(),
+            //     ]),
+
+        ];
     }
+
 }
