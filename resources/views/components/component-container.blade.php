@@ -7,7 +7,7 @@
     :two-xl="$getColumns('2xl')"
     class="filament-component-container gap-6"
 >
-    @foreach ($getComponents(withHidden: false) as $filamentComponent)
+    @foreach ($getComponents(withHidden: false) as $key => $filamentComponent)
         @php
             $columns = [];
             if (method_exists($filamentComponent, 'getColumnSpan')) {
@@ -60,7 +60,7 @@
                 $filamentComponent instanceof \Filament\Pages\Page)
 
                 @php
-                    $data = [];
+                    $data = $getChildComponentData($key);
 
                     if ($filamentComponent instanceof \Filament\Resources\Pages\EditRecord) {
                         $data = array_merge([

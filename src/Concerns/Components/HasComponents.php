@@ -11,6 +11,8 @@ trait HasComponents
 {
     protected array | Closure $components = [];
 
+    protected array | Closure $componentsData = [];
+
     public function components(array | Closure $components): static
     {
         $this->components = $components;
@@ -21,6 +23,13 @@ trait HasComponents
     public function schema(array | Closure $components): static
     {
         $this->components($components);
+
+        return $this;
+    }
+
+    public function schemaComponentData(array | Closure $data): static
+    {
+        $this->componentsData = $data;
 
         return $this;
     }
@@ -48,5 +57,23 @@ trait HasComponents
             $components,
             fn ($component) => $component instanceof FilamentComponent ? ! $component->isHidden() : true,
         );
+    }
+
+
+    public function getChildComponentData($key): array
+    {
+        $componentData = array_map(function ($data) {
+            if (is_null($data)) {
+                return [];
+            }
+            else if (! is_array($data)) {
+                return [$data];
+            }
+
+            return $data;
+
+        }, $this->evaluate($this->componentsData));
+
+        return data_get($componentData, $key, []);
     }
 }

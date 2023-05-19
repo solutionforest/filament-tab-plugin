@@ -8,6 +8,8 @@ use Closure;
 trait HasChildComponents
 {
     protected array | Closure $childComponents = [];
+    
+    protected array | Closure $childComponentsData = [];
 
     public function childComponents(array | Closure $components): static
     {
@@ -23,9 +25,24 @@ trait HasChildComponents
         return $this;
     }
 
+    public function schemaComponentData(array | Closure $schema): static
+    {
+        $this->childComponentsData = $schema;
+
+        return $this;
+    }
+
+    /**
+     * Components' parameters (Need same array key with components)
+     */
     public function getChildComponents(): array
     {
         return $this->evaluate($this->childComponents);
+    }
+
+    public function getChildComponentsData(): array
+    {
+        return $this->evaluate($this->childComponentsData);
     }
 
     public function getChildComponentContainer($key = null): ComponentContainer
@@ -36,7 +53,8 @@ trait HasChildComponents
 
         return ComponentContainer::make()
             ->parentComponent($this)
-            ->components($this->getChildComponents());
+            ->components($this->getChildComponents())
+            ->schemaComponentData($this->getChildComponentsData());
     }
 
     public function getChildComponentContainers(bool $withHidden = false): array
