@@ -62,8 +62,8 @@
                 @php
                     $data = $getChildComponentData($key);
 
-                    if ($filamentComponent instanceof \Filament\Resources\Pages\EditRecord) {
-                        $data = array_merge([
+                    if ($filamentComponent instanceof \Filament\Resources\Pages\EditRecord && !isset($data['record'])) {
+                        $data = array_merge($data, [
                             'record' => $filamentComponent->record?->getKey(),
                         ]);
                     }
