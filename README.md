@@ -9,6 +9,11 @@ This plugin creates widgets with tab layout for Filament Admin.
 
 ![filament-tab-1](https://github.com/solutionforest/filament-tab-plugin/assets/68525320/0dd61497-1c22-474c-b74a-75700df51292)
 
+Demo site : https://filament-cms-website-demo.solutionforest.net/
+
+Demo username : demo@solutionforest.net
+
+Demo password : 12345678 Auto Reset every hour.
 ## Installation
 
 You can install the package via composer:
@@ -57,13 +62,44 @@ class DummyTabs extends BaseWidget
 
 Tabs may have an icon and badge, which you can set using the `icon()` and `badge()` methods:
 ```php
-    Tab::make('Label 1')
-        ->icon('heroicon-o-bell') 
-        ->badge('39')
-        ->schema([
-            // ...
-        ]),
+Tab::make('Label 1')
+    ->icon('heroicon-o-bell') 
+    ->badge('39')
+    ->schema([
+        // ...
+    ]),
 ```
+
+## Assign parameters to component
+Additionally, you have the option to pass an array of data to your component.
+> **Tip: Ensure that the index or key of the `schemaComponentData` array matches the component's index or key. This is important for proper rendering and functioning of the component. !!!**
+```php
+protected function schema(): array
+{
+    return [
+
+        // SAMPLE CODE, CAN DELETE
+        TabLayoutTab::make('Label 1')
+            ->icon('heroicon-o-bell')
+            ->badge('39')
+            ->schema([
+                new \Filament\Widgets\AccountWidget,
+                new \App\Filament\Resources\ProductCategoryResource\Pages\ViewProductCategory() // TARGET COMPONENT
+            ])
+            ->schemaComponentData([
+                null,
+                ['record' => 1 ]    // TARGET COMPONENT'S DATA
+            ]),
+        TabLayoutTab::make('Label 2')
+            ->schema([
+                new \Filament\Widgets\FilamentInfoWidget(),
+            ]),
+
+    ];
+}
+```
+![tab-example-1](https://github.com/solutionforest/filament-tab-plugin/assets/68525320/1061acbb-cfdf-422f-8c2f-1c0f709ecf7f)
+![tab-example-2](https://github.com/solutionforest/filament-tab-plugin/assets/68525320/23898112-9d25-4260-bed1-081e679b8b68)
 
 
 ## Changelog
