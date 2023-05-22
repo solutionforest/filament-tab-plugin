@@ -9,7 +9,7 @@ This plugin creates widgets with tab layout for Filament Admin.
 
 ![filament-tab-1](https://github.com/solutionforest/filament-tab-plugin/assets/68525320/0dd61497-1c22-474c-b74a-75700df51292)
 
-Demo site : https://filament-cms-website-demo.solutionforest.net/
+Demo site : https://filament-cms-website-demo.solutionforest.net/admin
 
 Demo username : demo@solutionforest.net
 
@@ -38,6 +38,7 @@ php artisan make:filament-tab-widget DummyTabs
 You will then define the child component 'schema()' to display inside:
 ```php
 use SolutionForest\TabLayoutPlugin\Components\Tabs\Tab as TabLayoutTab;
+use SolutionForest\TabLayoutPlugin\Components\Tabs\TabContainer;
 use SolutionForest\TabLayoutPlugin\Widgets\TabsWidget as BaseWidget;
 
 class DummyTabs extends BaseWidget
@@ -49,12 +50,17 @@ class DummyTabs extends BaseWidget
                 ->icon('heroicon-o-bell') 
                 ->badge('39')
                 ->schema([
-                    // ...
+                    TabContainer::make(\Filament\Widgets\AccountWidget::class)
                 ]),
             TabLayoutTab::make('Label 2')
                 ->schema([
-                    // ...
-                ]),
+                    TabContainer::make(\Filament\Widgets\AccountWidget::class)
+                        ->columnSpan(1),
+                    TabContainer::make(\Filament\Widgets\AccountWidget::class)
+                        ->columnSpan(1),
+                ])
+                ->columns(2),
+            TabLayoutTab::make('Go To Filamentphp (Link)')->url("https://filamentphp.com/", true),
         ];
     }
 }
@@ -72,29 +78,22 @@ Tab::make('Label 1')
 
 ## Assign parameters to component
 Additionally, you have the option to pass an array of data to your component.
-> **Tip: Ensure that the index or key of the `schemaComponentData` array matches the component's index or key. This is important for proper rendering and functioning of the component. !!!**
 ```php
 protected function schema(): array
 {
     return [
-
-        // SAMPLE CODE, CAN DELETE
         TabLayoutTab::make('Label 1')
             ->icon('heroicon-o-bell')
             ->badge('39')
             ->schema([
-                new \Filament\Widgets\AccountWidget,
-                new \App\Filament\Resources\ProductCategoryResource\Pages\ViewProductCategory() // TARGET COMPONENT
-            ])
-            ->schemaComponentData([
-                null,
-                ['record' => 1 ]    // TARGET COMPONENT'S DATA
+                TabContainer::make(\Filament\Widgets\AccountWidget::class)
+                TabContainer::make(ViewProductCategory::class)  //TARGET COMPONENT
+                    ->data(['record' => 1]),    // TARGET COMPONENT'S DATA
             ]),
         TabLayoutTab::make('Label 2')
             ->schema([
-                new \Filament\Widgets\FilamentInfoWidget(),
+                TabContainer::make(\Filament\Widgets\FilamentInfoWidget::class),
             ]),
-
     ];
 }
 ```
