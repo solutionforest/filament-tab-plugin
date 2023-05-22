@@ -13,6 +13,7 @@
 
             $tabComponent = $tabContainer->getComponent();
             $data = $tabContainer->getData() ?? [];
+
         @endphp
 
         <x-filament-support::grid.column
@@ -38,7 +39,14 @@
             } : null"
         >
 
-            @livewire(\Livewire\Livewire::getAlias($tabComponent), $data)
+            @if ($tabComponent)
+                @if ($tabComponent == \Livewire\Livewire::getAlias(\SolutionForest\TabLayoutPlugin\Components\Tabs\ComponentWrapper::class))
+                    @livewire($tabComponent, $data)
+                @else
+                    
+                    @livewire(\Livewire\Livewire::getAlias($tabComponent), $data)
+                @endif
+            @endif
 
         </x-filament-support::grid.column>
     @endforeach

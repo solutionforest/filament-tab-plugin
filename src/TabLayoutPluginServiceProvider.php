@@ -3,8 +3,10 @@
 namespace SolutionForest\TabLayoutPlugin;
 
 use Filament\PluginServiceProvider;
+use Livewire\Livewire;
 use SolutionForest\TabLayoutPlugin\Commands;
 use SolutionForest\TabLayoutPlugin\Components;
+use SolutionForest\TabLayoutPlugin\Components\Tabs\ComponentWrapper;
 use SolutionForest\TabLayoutPlugin\Pages;
 use Spatie\LaravelPackageTools\Package;
 
@@ -26,5 +28,12 @@ class TabLayoutPluginServiceProvider extends PluginServiceProvider
             Commands\MakeTabWidgetCommand::class,
             Commands\MakeTabComponent::class,
         ];
+    }
+
+    public function bootingPackage()
+    {
+        parent::bootingPackage();
+
+        Livewire::component(static::$name.'::component-wrapper', ComponentWrapper::class);
     }
 }
