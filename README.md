@@ -101,6 +101,50 @@ protected function schema(): array
 ![tab-example-2](https://github.com/solutionforest/filament-tab-plugin/assets/68525320/23898112-9d25-4260-bed1-081e679b8b68)
 
 
+In addition to using the `TabContainer` component, you can create your own custom tab layout components by extending the `TabLayoutComponent` class or using command `php artisan tab-layout:component`.
+
+For example, the following PHP code defines a FilamentInfoWidget class that extends TabLayoutComponent and specifies a `ComponentTabComponent` as the tab component to use. The **getData** method can be used to populate the component with data.
+```php
+<?php
+
+namespace App\Filament\Tabs\Components;
+
+use Filament\Widgets\FilamentInfoWidget as ComponentTabComponent;
+use SolutionForest\TabLayoutPlugin\Components\Tabs\TabLayoutComponent;
+
+class FilamentInfoWidget extends TabLayoutComponent
+{
+    protected ?string $component = ComponentTabComponent::class;
+
+    public function getData(): array
+    {
+        return [
+            // Data to assign to component
+        ];
+    }
+}
+```
+You can also use the `php artisan tab-layout:component` command to generate the code for a new tab layout component. For example, to generate a `FilamentInfoWidget` component, you can run the following command:
+```bash
+php artisan tab-layout:component FilamentInfoWidget Filament\Widgets\FilamentInfoWidget
+```
+
+After creating your custom tab layout component by extending the `TabLayoutComponent` class, you can register it on the schema of a `TabLayoutTab` instance.
+```php
+protected function schema(): array
+{
+    return [
+        ...
+        TabLayoutTab::make('Label 3')
+            ->schema([
+                App\Filament\Tabs\Components\FilamentInfoWidget::make()
+                    // ->data([]),  // Also can assign data here
+            ]),
+    ];
+}
+```
+
+
 ## Changelog
 
 Please see [CHANGELOG](../../releases) for more information on what has changed recently.
