@@ -15,7 +15,7 @@ class MakeTabWidgetCommand extends Command
 
     protected $description = 'Creates a Filament tab widget class.';
 
-    protected $signature = 'make:filament-tab-widget {name?}';
+    protected $signature = 'make:filament-tab-widget {name?} {--F|force}';
 
     public function handle(): int
     {
@@ -38,6 +38,11 @@ class MakeTabWidgetCommand extends Command
             ->replace('\\', '/')
             ->replace('//', '/')
             ->append('.php');
+
+
+        if (! $this->option('force') && $this->checkForCollision([$path])) {
+            return static::INVALID;
+        }
 
         $this->copyStubToApp('TabsWidget', $path, [
             'class' => $widgetClass,
