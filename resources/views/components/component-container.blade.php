@@ -7,27 +7,12 @@
     :two-xl="$getColumns('2xl')"
     class="filament-component-container gap-6"
 >
-    @foreach ($getComponents(withHidden: false) as $key => $filamentComponent)
+    @foreach ($getComponents(withHidden: false) as $tabContainer)
         @php
-            $columns = [];
-            if (method_exists($filamentComponent, 'getColumnSpan')) {
-                if ($filamentComponent instanceof \Filament\Widgets\Widget || $filamentComponent instanceof \Filament\Tables\Table) {
-                    $widgetColumns = $filamentComponent->getColumnSpan();
-                    if (!is_array($widgetColumns)) {
-                        $columns = array_merge([
-                            'default' => $filamentComponent instanceof \SolutionForest\TabLayoutPlugin\Widgets\TabsWidget
-                                ? 'full'
-                                : null,
-                            'lg' => $widgetColumns,
-                        ]);
-                    } else {
-                        $columns = $widgetColumns;
-                    }
-                } 
-                else {
-                    $columns = $filamentComponent->getColumnSpan() ?? [];
-                }
-            }
+            $columns = $tabContainer->getColumnSpan() ?? [];
+
+            $tabComponent = $tabContainer->getComponent();
+            $data = $tabContainer->getData() ?? [];
         @endphp
 
         <x-filament-support::grid.column
@@ -37,7 +22,7 @@
             :lg="$columns['lg'] ?? null"
             :xl="$columns['xl'] ?? null"
             twoXl="{{ $columns['2xl'] ?? null }}"
-            :class="(method_exists($filamentComponent, 'getMaxWidth') && $maxWidth = $filamentComponent->getMaxWidth()) ? match ($maxWidth) {
+            :class="(method_exists($tabContainer, 'getMaxWidth') && $maxWidth = $tabContainer->getMaxWidth()) ? match ($maxWidth) {
                 'xs' => 'max-w-xs',
                 'sm' => 'max-w-sm',
                 'md' => 'max-w-md',
@@ -53,28 +38,8 @@
             } : null"
         >
 
-            @if ($filamentComponent instanceof \Filament\Widgets\Widget || 
-                $filamentComponent instanceof \Filament\Tables\Table ||
-                // CreateRecord / EditRecord / ListRecord
-                $filamentComponent instanceof \Filament\Resources\Pages\Page ||
-                $filamentComponent instanceof \Filament\Pages\Page)
+            @livewire(\Livewire\Livewire::getAlias($tabComponent), $data)
 
-                @php
-                    $data = $getChildComponentData($key);
-
-                    if ($filamentComponent instanceof \Filament\Resources\Pages\EditRecord && !isset($data['record'])) {
-                        $data = array_merge($data, [
-                            'record' => $filamentComponent->record?->getKey(),
-                        ]);
-                    }
-                @endphp
-
-                @livewire(\Livewire\Livewire::getAlias(get_class($filamentComponent)), $data)
-
-            @else
-                {{ $filamentComponent }}
-
-            @endif
         </x-filament-support::grid.column>
     @endforeach
 </x-filament-support::grid>

@@ -15,6 +15,7 @@ class TabLayoutPluginServiceProvider extends PluginServiceProvider
     public function configurePackage(Package $package): void
     {
         $package->name(static::$name)
+            ->hasConfigFile()
             ->hasCommands($this->getCommands())
             ->hasViews();
     }
@@ -23,6 +24,7 @@ class TabLayoutPluginServiceProvider extends PluginServiceProvider
     {
         return [
             Commands\MakeTabWidgetCommand::class,
+            Commands\MakeTabComponent::class,
         ];
     }
 }

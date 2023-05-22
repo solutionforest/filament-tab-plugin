@@ -1,0 +1,11 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ component }};
+use SolutionForest\TabLayoutPlugin\Components\Tabs\TabLayoutComponent;
+
+class {{ class }} extends TabLayoutComponent
+{
+    protected string $component = {{ componentClass }}::class;
+}

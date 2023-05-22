@@ -1,6 +1,7 @@
 <?php
 
 namespace SolutionForest\TabLayoutPlugin\Concerns\Components;
+
 use Closure;
 
 trait CanSpanColumns

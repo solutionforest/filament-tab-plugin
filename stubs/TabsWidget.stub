@@ -3,6 +3,7 @@
 namespace {{ namespace }};
 
 use SolutionForest\TabLayoutPlugin\Components\Tabs\Tab as TabLayoutTab;
+use SolutionForest\TabLayoutPlugin\Components\Tabs\TabContainer;
 use SolutionForest\TabLayoutPlugin\Widgets\TabsWidget as BaseWidget;
 
 class {{ class }} extends BaseWidget
@@ -16,11 +17,11 @@ class {{ class }} extends BaseWidget
             //     ->icon('heroicon-o-bell')
             //     ->badge('39')
             //     ->schema([
-            //         new \Filament\Widgets\AccountWidget(),
+            //         TabContainer::make(\Filament\Widgets\AccountWidget::class),
             //     ]),
             // TabLayoutTab::make('Label 2')
             //     ->schema([
-            //         new \Filament\Widgets\FilamentInfoWidget(),
+            //         TabContainer::make(\Filament\Widgets\FilamentInfoWidget::class),
             //     ]),
 
         ];

@@ -6,6 +6,9 @@ use Illuminate\Support\Str;
 use SolutionForest\TabLayoutPlugin\Components\ComponentContainer;
 use SolutionForest\TabLayoutPlugin\Components\FilamentComponent;
 use Closure;
+use SolutionForest\TabLayoutPlugin\Components\Tabs\Tab as TabsLayoutTab;
+use SolutionForest\TabLayoutPlugin\Components\Tabs\TabContainer;
+use SolutionForest\TabLayoutPlugin\Components\Tabs\TabLayoutComponent;
 
 trait HasComponents
 {
@@ -27,6 +30,9 @@ trait HasComponents
         return $this;
     }
 
+    /**
+     * @deprecated Since version 1.0.0
+     */
     public function schemaComponentData(array | Closure $data): static
     {
         $this->componentsData = $data;
@@ -36,14 +42,11 @@ trait HasComponents
 
     public function getComponents(bool $withHidden = false): array
     {
-        $components = array_map(function (\Filament\Support\Components\Component|\Livewire\Component|\Illuminate\View\View|\Filament\Resources\Form|string $component) {
+        $components = array_map(function (TabContainer|TabLayoutComponent|TabsLayoutTab $component) {
 
             if ($component instanceof FilamentComponent) {
 
                 $component->container($this);
-            } else if (is_string($component) && strip_tags($component)) {
-                return Str::of($component)->toHtmlString();
-
             }
 
             return $component;
@@ -55,11 +58,13 @@ trait HasComponents
 
         return array_filter(
             $components,
-            fn ($component) => $component instanceof FilamentComponent ? ! $component->isHidden() : true,
+            fn (TabContainer|TabLayoutComponent|TabsLayoutTab $component) => ! $component->isHidden(),
         );
     }
 
-
+    /**
+     * @deprecated Since version 1.0.0
+     */
     public function getChildComponentData($key): array
     {
         $componentData = array_map(function ($data) {

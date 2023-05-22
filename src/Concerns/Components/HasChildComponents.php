@@ -25,6 +25,9 @@ trait HasChildComponents
         return $this;
     }
 
+    /**
+     * @deprecated Since version 1.0.0
+     */
     public function schemaComponentData(array | Closure $schema): static
     {
         $this->childComponentsData = $schema;
@@ -39,7 +42,10 @@ trait HasChildComponents
     {
         return $this->evaluate($this->childComponents);
     }
-
+    
+    /**
+     * @deprecated Since version 1.0.0
+     */
     public function getChildComponentsData(): array
     {
         return $this->evaluate($this->childComponentsData);
@@ -53,8 +59,7 @@ trait HasChildComponents
 
         return ComponentContainer::make()
             ->parentComponent($this)
-            ->components($this->getChildComponents())
-            ->schemaComponentData($this->getChildComponentsData());
+            ->components($this->getChildComponents());
     }
 
     public function getChildComponentContainers(bool $withHidden = false): array
