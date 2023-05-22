@@ -7,5 +7,5 @@ use SolutionForest\TabLayoutPlugin\Components\Tabs\TabLayoutComponent;
 
 class {{ class }} extends TabLayoutComponent
 {
-    protected string ?$component = {{ componentClass }}::class;
+    protected ?string $component = {{ componentClass }}::class;
 }
