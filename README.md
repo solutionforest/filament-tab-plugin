@@ -1,5 +1,5 @@
 > [!IMPORTANT]
-> We will achieve this project since filament3 supports tabs now.
+> We will archive this project since filament3 supports tabs now.
 > https://beta.filamentphp.com/docs/3.x/infolists/layout/tabs
 
 # Tab Layout Plugin
