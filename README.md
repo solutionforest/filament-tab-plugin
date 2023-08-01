@@ -1,3 +1,7 @@
+> [!IMPORTANT]
+> We will achieve this project since filament3 supports tabs now.
+> https://beta.filamentphp.com/docs/3.x/infolists/layout/tabs
+
 # Tab Layout Plugin
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/solution-forest/tab-layout-plugin.svg?style=flat-square)](https://packagist.org/packages/solution-forest/tab-layout-plugin)
