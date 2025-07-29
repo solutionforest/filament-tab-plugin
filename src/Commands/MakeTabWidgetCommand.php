@@ -22,12 +22,12 @@ class MakeTabWidgetCommand extends Command
         $namespace = config('filament.widgets.namespace', 'App\\Filament\\Widgets');
 
         $widget = Str::of(
-                strval($this->argument('name') ?? text(
-                    label: 'Name',
-                    placeholder: '(e.g. `MemberDetails`)', 
-                    required: true
-                ))
-            )
+            strval($this->argument('name') ?? text(
+                label: 'Name',
+                placeholder: '(e.g. `MemberDetails`)',
+                required: true
+            ))
+        )
             ->trim('/')
             ->trim('\\')
             ->trim(' ')

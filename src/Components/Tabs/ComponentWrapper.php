@@ -30,7 +30,7 @@ class ComponentWrapper extends Component
     }
 
     /**
-     * @param null | string | object $rawComponent
+     * @param  null | string | object  $rawComponent
      * @return static
      */
     public function mount($rawComponent)

@@ -20,7 +20,7 @@ class TabWidgetContentConfiguration
     public static function parseFormArray(array $data): static
     {
         $component = $data['component'] ?? null;
-        if (empty($component) || !is_string($component)) {
+        if (empty($component) || ! is_string($component)) {
             throw new \InvalidArgumentException('Each tab must have a "widget" key with a string value.');
         }
 

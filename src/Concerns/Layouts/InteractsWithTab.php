@@ -48,6 +48,7 @@ trait InteractsWithTab
                 if (($tabSchema = $this->getTabSchema()) && is_array($tabSchema)) {
                     $tabs = array_merge($tabs, $this->convertTabComponents($tabSchema));
                 }
+
                 return $tabs;
             });
     }

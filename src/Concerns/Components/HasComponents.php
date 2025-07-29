@@ -3,10 +3,8 @@
 namespace SolutionForest\TabLayoutPlugin\Concerns\Components;
 
 use Closure;
-use Illuminate\Contracts\Support\Htmlable;
 use Livewire\Component as LivewireComponent;
 use SolutionForest\TabLayoutPlugin\Components\FilamentComponent;
-use SolutionForest\TabLayoutPlugin\Components\Tabs\ComponentWrapper;
 use SolutionForest\TabLayoutPlugin\Components\Tabs\Tab as TabsLayoutTab;
 use SolutionForest\TabLayoutPlugin\Components\Tabs\TabContainer;
 use SolutionForest\TabLayoutPlugin\Components\Tabs\TabLayoutComponent;
@@ -50,7 +48,7 @@ trait HasComponents
                 return $component->container($this);
 
             } elseif ($component instanceof TabContainer || $component instanceof TabLayoutComponent) {
-                
+
                 return $component;
 
             } elseif (is_string($component)) {

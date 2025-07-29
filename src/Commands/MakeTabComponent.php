@@ -22,12 +22,12 @@ class MakeTabComponent extends Command
         $namespace = config('tab-layout-plugin.component.namespace', 'App\\Filament\\Tabs\\Components');
 
         $name = (string) Str::of(
-                strval($this->argument('name') ?? text(
-                    label: 'Name',
-                    placeholder: '(e.g. `EditProductCategoryPage`)',
-                    required: true
-                )),
-            )
+            strval($this->argument('name') ?? text(
+                label: 'Name',
+                placeholder: '(e.g. `EditProductCategoryPage`)',
+                required: true
+            )),
+        )
             ->studly()
             ->trim('/')
             ->trim('\\')
@@ -49,12 +49,12 @@ class MakeTabComponent extends Command
         $className = Str::afterLast($class, '\\');
 
         $component = (string) Str::of(
-                strval($this->argument('component') ?? text(
-                    label: 'Component',
-                    placeholder: '(e.g. `App\Filament\Resources\ProductCategoryResource\Pages\EditProductCategory`)', 
-                    required: true
-                ))
-            )
+            strval($this->argument('component') ?? text(
+                label: 'Component',
+                placeholder: '(e.g. `App\Filament\Resources\ProductCategoryResource\Pages\EditProductCategory`)',
+                required: true
+            ))
+        )
             ->replace('/', '\\');
 
         if (! $this->option('force') && $this->checkForCollision([$path])) {
