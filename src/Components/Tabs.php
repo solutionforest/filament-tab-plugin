@@ -3,7 +3,6 @@
 namespace SolutionForest\TabLayoutPlugin\Components;
 
 use Closure;
-use Filament\Support\Components\ViewComponent;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
 
 class Tabs extends FilamentComponent
@@ -12,9 +11,9 @@ class Tabs extends FilamentComponent
 
     protected string $view = 'tab-layout-plugin::components.tabs';
 
-    public int | Closure $activeTab = 1;
+    public int|Closure $activeTab = 1;
 
-    protected string | Closure | null $tabQueryStringKey = null;
+    protected string|Closure|null $tabQueryStringKey = null;
 
     public function __construct()
     {
@@ -29,14 +28,14 @@ class Tabs extends FilamentComponent
         return $static;
     }
 
-    public function tabs(array | Closure $tabs): static
+    public function tabs(array|Closure $tabs): static
     {
         $this->childComponents($tabs);
 
         return $this;
     }
 
-    public function activeTab(int | Closure $activeTab): static
+    public function activeTab(int|Closure $activeTab): static
     {
         $this->activeTab = $activeTab;
 
@@ -70,7 +69,7 @@ class Tabs extends FilamentComponent
         return filled($this->getTabQueryStringKey());
     }
 
-    public function persistTabInQueryString(string | Closure | null $key = 'tab'): static
+    public function persistTabInQueryString(string|Closure|null $key = 'tab'): static
     {
         $this->tabQueryStringKey = $key;
 

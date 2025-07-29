@@ -1,17 +1,16 @@
 <?php
 
-namespace  SolutionForest\TabLayoutPlugin\Commands;
+namespace SolutionForest\TabLayoutPlugin\Commands;
 
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
-use Filament\Support\Commands\Concerns\CanValidateInput;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
+
+use function Laravel\Prompts\text;
 
 class MakeTabWidgetCommand extends Command
 {
     use CanManipulateFiles;
-    use CanValidateInput;
 
     protected $description = 'Creates a Filament tab widget class.';
 
@@ -22,7 +21,13 @@ class MakeTabWidgetCommand extends Command
         $path = config('filament.widgets.path', app_path('Filament/Widgets/'));
         $namespace = config('filament.widgets.namespace', 'App\\Filament\\Widgets');
 
-        $widget =  Str::of(strval($this->argument('name') ?? $this->askRequired('Name (e.g. `MemberDetails`)', 'name')))
+        $widget = Str::of(
+                strval($this->argument('name') ?? text(
+                    label: 'Name',
+                    placeholder: '(e.g. `MemberDetails`)', 
+                    required: true
+                ))
+            )
             ->trim('/')
             ->trim('\\')
             ->trim(' ')
@@ -39,14 +44,13 @@ class MakeTabWidgetCommand extends Command
             ->replace('//', '/')
             ->append('.php');
 
-
         if (! $this->option('force') && $this->checkForCollision([$path])) {
             return static::INVALID;
         }
 
         $this->copyStubToApp('TabsWidget', $path, [
             'class' => $widgetClass,
-            'namespace' => $namespace . ($widgetNamespace !== '' ? "\\{$widgetNamespace}" : ''),
+            'namespace' => $namespace.($widgetNamespace !== '' ? "\\{$widgetNamespace}" : ''),
         ]);
 
         $this->info("Successfully created {$widget}!");

@@ -2,23 +2,23 @@
 
 namespace SolutionForest\TabLayoutPlugin\Concerns\Components;
 
-use SolutionForest\TabLayoutPlugin\Components\ComponentContainer;
 use Closure;
+use SolutionForest\TabLayoutPlugin\Components\ComponentContainer;
 
 trait HasChildComponents
 {
-    protected array | Closure $childComponents = [];
-    
-    protected array | Closure $childComponentsData = [];
+    protected array|Closure $childComponents = [];
 
-    public function childComponents(array | Closure $components): static
+    protected array|Closure $childComponentsData = [];
+
+    public function childComponents(array|Closure $components): static
     {
         $this->childComponents = $components;
 
         return $this;
     }
 
-    public function schema(array | Closure $components): static
+    public function schema(array|Closure $components): static
     {
         $this->childComponents($components);
 
@@ -28,7 +28,7 @@ trait HasChildComponents
     /**
      * @deprecated Since version 1.0.0
      */
-    public function schemaComponentData(array | Closure $schema): static
+    public function schemaComponentData(array|Closure $schema): static
     {
         $this->childComponentsData = $schema;
 
@@ -42,7 +42,7 @@ trait HasChildComponents
     {
         return $this->evaluate($this->childComponents);
     }
-    
+
     /**
      * @deprecated Since version 1.0.0
      */

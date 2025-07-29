@@ -2,29 +2,32 @@
 
 namespace SolutionForest\TabLayoutPlugin\Components\Tabs;
 
-use SolutionForest\TabLayoutPlugin\Components\FilamentComponent;
-use SolutionForest\TabLayoutPlugin\Concerns;
 use Closure;
 use Illuminate\Support\Str;
+use SolutionForest\TabLayoutPlugin\Components\FilamentComponent;
+use SolutionForest\TabLayoutPlugin\Concerns\Components\HasBadge;
+use SolutionForest\TabLayoutPlugin\Concerns\Components\HasIcon;
 
 class Tab extends FilamentComponent
 {
-    use Concerns\Components\HasIcon;
-    use Concerns\Components\HasBadge;
+    use HasBadge;
+    use HasIcon;
 
     protected string $view = 'tab-layout-plugin::components.tabs.tab';
 
     protected bool $shouldOpenUrlInNewTab = false;
 
-    protected string | Closure | null $url = null;
+    protected string|Closure|null $url = null;
 
-    final public function __construct(string $label, string $id = null)
+    protected ?string $tabId = null;
+
+    final public function __construct(string $label, ?string $id = null)
     {
         $this->label($label);
-        $this->id(Str::slug($id ?: $label));
+        $this->tabId(Str::slug($id ?: $label));
     }
 
-    public static function make(string $label, string $id = null): static
+    public static function make(string $label, ?string $id = null): static
     {
         $static = app(static::class, ['label' => $label, 'id' => $id]);
         $static->configure();
@@ -32,9 +35,16 @@ class Tab extends FilamentComponent
         return $static;
     }
 
-    public function url(string | Closure | null $url, bool $shouldOpenInNewTab = false): static
+    public function tabId(string $tabId): static
     {
-        $this->shouldOpenUrlInNewTab = $shouldOpenInNewTab;
+        $this->tabId = $tabId;
+
+        return $this;
+    }
+
+    public function url(string|Closure|null $url, bool $shouldOpenInNewTab = false): static
+    {
+        $this->openUrlInNewTab($shouldOpenInNewTab);
         $this->url = $url;
 
         return $this;
@@ -49,7 +59,12 @@ class Tab extends FilamentComponent
 
     public function getId(): string
     {
-        return $this->getContainer()->getParentComponent()->getId() . '-' . parent::getId() . '-tab';
+        return $this->getContainer()->getParentComponent()->getId().'-'.$this->getTabId().'-tab';
+    }
+
+    public function getTabId(): string
+    {
+        return $this->tabId;
     }
 
     public function getColumnsConfig(): array

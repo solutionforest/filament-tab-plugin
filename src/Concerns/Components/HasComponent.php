@@ -6,7 +6,7 @@ trait HasComponent
 {
     protected ?string $component = null;
 
-    public function component(string $component) : static
+    public function component(string $component): static
     {
         $this->component = $component;
 

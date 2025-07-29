@@ -6,9 +6,9 @@ use Closure;
 
 trait HasBadge
 {
-    protected string | Closure | null $badge = null;
+    protected string|Closure|null $badge = null;
 
-    public function badge(string | Closure | null $badge): static
+    public function badge(string|Closure|null $badge): static
     {
         $this->badge = $badge;
 

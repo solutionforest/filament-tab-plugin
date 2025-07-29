@@ -3,29 +3,24 @@
 namespace SolutionForest\TabLayoutPlugin\Concerns\Components;
 
 use Closure;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Traits\Conditionable;
 
 trait CanBeHidden
 {
-    protected bool | Closure $isHidden = false;
+    use Conditionable;
 
-    protected bool | Closure $isVisible = true;
+    protected bool|Closure $isHidden = false;
 
-    public function hidden(bool | Closure $condition = true): static
+    protected bool|Closure $isVisible = true;
+
+    public function hidden(bool|Closure $condition = true): static
     {
         $this->isHidden = $condition;
 
         return $this;
     }
 
-    public function when(bool | Closure $condition = true): static
-    {
-        $this->visible($condition);
-
-        return $this;
-    }
-
-    public function visible(bool | Closure $condition = true): static
+    public function visible(bool|Closure $condition = true): static
     {
         $this->isVisible = $condition;
 

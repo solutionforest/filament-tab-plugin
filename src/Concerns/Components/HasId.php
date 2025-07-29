@@ -6,9 +6,9 @@ use Closure;
 
 trait HasId
 {
-    protected string | Closure | null $id = null;
+    protected string|Closure|null $id = null;
 
-    public function id(string | Closure | null $id): static
+    public function id(string|Closure|null $id): static
     {
         $this->id = $id;
 

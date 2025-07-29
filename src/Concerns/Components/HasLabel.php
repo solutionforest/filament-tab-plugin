@@ -7,20 +7,20 @@ use Illuminate\Contracts\Support\Htmlable;
 
 trait HasLabel
 {
-    protected bool | Closure $isLabelHidden = false;
+    protected bool|Closure $isLabelHidden = false;
 
-    protected string | Htmlable | Closure | null $label = null;
+    protected string|Htmlable|Closure|null $label = null;
 
     protected bool $shouldTranslateLabel = false;
 
-    public function disableLabel(bool | Closure $condition = true): static
+    public function disableLabel(bool|Closure $condition = true): static
     {
         $this->isLabelHidden = $condition;
 
         return $this;
     }
 
-    public function label(string | Htmlable | Closure | null $label): static
+    public function label(string|Htmlable|Closure|null $label): static
     {
         $this->label = $label;
 
@@ -34,7 +34,7 @@ trait HasLabel
         return $this;
     }
 
-    public function getLabel(): string | Htmlable | null
+    public function getLabel(): string|Htmlable|null
     {
         $label = $this->evaluate($this->label);
 

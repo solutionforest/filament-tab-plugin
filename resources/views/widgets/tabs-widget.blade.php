@@ -1,3 +1,3 @@
-<x-filament::widget class="filament-widgets-tabs-widget">
+<x-filament-widgets::widget class="filament-widgets-tabs-widget">
     {{ $this->tabs }}
-</x-filament::widget>
+</x-filament-widgets::widget>

@@ -1,3 +1,10 @@
+@use('SolutionForest\TabLayoutPlugin\Components\Tabs')
+@use('SolutionForest\TabLayoutPlugin\Components\Tabs\Tab')
+@php
+    $livewireId = $this->getId();
+    $currentTabId = $getId();
+    $generatedLivewireKey = "{$livewireId}." . Tabs::class . ".container";
+@endphp
 <div
     x-data="{
 
@@ -10,7 +17,6 @@
         },
 
         getTabs: function () {
-            console.log(this.$refs)
             return JSON.parse(this.$refs.tabsData.value)
         },
 
@@ -27,20 +33,26 @@
 
     }"
     x-cloak
-    {!! $getId() ? "id=\"{$getId()}\"" : null !!}
-    {{ $attributes->merge($getExtraAttributes())->class([
-        'filament-tabs-component rounded-xl shadow-sm border border-gray-300 bg-white',
-        'dark:bg-gray-800 dark:border-gray-700' => config('filament.dark_mode'),
-    ]) }}
+    {{ 
+        $attributes
+            ->merge($getExtraAttributes())
+            ->class([
+                'filament-tabs-component rounded-xl shadow-sm border border-gray-300 bg-white',
+                'dark:bg-gray-800 dark:border-gray-700' => config('filament.dark_mode'),
+            ]) 
+            ->merge([
+                "id=\"{$currentTabId}\"" => filled($currentTabId),
+                "wire:key=\"{$generatedLivewireKey}\"",
+            ])
+    }}
     {{ $getExtraAlpineAttributeBag() }}
-    wire:key="{{ $this->id }}.{{ \SolutionForest\TabLayoutPlugin\Components\Tabs::class }}.container"
 >
     <input
         type="hidden"
         value='{{
             collect($getChildComponentContainer()->getComponents())
-                ->filter(static fn (\SolutionForest\TabLayoutPlugin\Components\Tabs\Tab $tab): bool => ! $tab->isHidden())
-                ->map(static fn (\SolutionForest\TabLayoutPlugin\Components\Tabs\Tab $tab) => $tab->getId())
+                ->filter(static fn (Tab $tab): bool => ! $tab->isHidden())
+                ->map(static fn (Tab $tab) => $tab->getId())
                 ->values()
                 ->toJson()
         }}'

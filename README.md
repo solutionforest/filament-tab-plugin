@@ -55,7 +55,15 @@ class DummyTabs extends BaseWidget
                 ->icon('heroicon-o-bell') 
                 ->badge('39')
                 ->schema([
-                    TabContainer::make(\Filament\Widgets\AccountWidget::class)
+                    TabContainer::make(\Filament\Widgets\AccountWidget::class),
+                    str('
+## This is a dummy html code inside tab
+
+- This is a bullet point
+- Another bullet point
+```php
+echo "This is a code block";
+```')->markdown()->toHtmlString(),
                 ]),
             TabLayoutTab::make('Label 2')
                 ->schema([
@@ -91,7 +99,7 @@ protected function schema(): array
             ->icon('heroicon-o-bell')
             ->badge('39')
             ->schema([
-                TabContainer::make(\Filament\Widgets\AccountWidget::class)
+                TabContainer::make(\Filament\Widgets\AccountWidget::class),
                 TabContainer::make(ViewProductCategory::class)  //TARGET COMPONENT
                     ->data(['record' => 1]),    // TARGET COMPONENT'S DATA
             ]),

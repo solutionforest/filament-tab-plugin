@@ -2,29 +2,29 @@
 
 namespace SolutionForest\TabLayoutPlugin\Concerns\Components;
 
-use Illuminate\Support\Str;
+use Closure;
+use Illuminate\Contracts\Support\Htmlable;
+use Livewire\Component as LivewireComponent;
 use SolutionForest\TabLayoutPlugin\Components\FilamentComponent;
 use SolutionForest\TabLayoutPlugin\Components\Tabs\ComponentWrapper;
-use Closure;
-use Livewire\Component as LivewireComponent;
 use SolutionForest\TabLayoutPlugin\Components\Tabs\Tab as TabsLayoutTab;
 use SolutionForest\TabLayoutPlugin\Components\Tabs\TabContainer;
 use SolutionForest\TabLayoutPlugin\Components\Tabs\TabLayoutComponent;
 
 trait HasComponents
 {
-    protected array | Closure $components = [];
+    protected array|Closure $components = [];
 
-    protected array | Closure $componentsData = [];
+    protected array|Closure $componentsData = [];
 
-    public function components(array | Closure $components): static
+    public function components(array|Closure $components): static
     {
         $this->components = $components;
 
         return $this;
     }
 
-    public function schema(array | Closure $components): static
+    public function schema(array|Closure $components): static
     {
         $this->components($components);
 
@@ -34,7 +34,7 @@ trait HasComponents
     /**
      * @deprecated Since version 1.0.0
      */
-    public function schemaComponentData(array | Closure $data): static
+    public function schemaComponentData(array|Closure $data): static
     {
         $this->componentsData = $data;
 
@@ -48,24 +48,31 @@ trait HasComponents
             if ($component instanceof FilamentComponent) {
 
                 return $component->container($this);
-            }
-            else if ($component instanceof TabContainer || $component instanceof TabLayoutComponent) {
 
+            } elseif ($component instanceof TabContainer || $component instanceof TabLayoutComponent) {
+                
                 return $component;
-            }
-            else if (is_object($component)) {
-                
-                if (\Livewire\Livewire::getAlias(get_class($component))) {
 
-                    return TabContainer::make(\Livewire\Livewire::getAlias(get_class($component)));
-                } 
-                $livewireAlias = \Livewire\Livewire::getAlias(ComponentWrapper::class);
-                return TabContainer::make($livewireAlias)->data(['rawComponent' => $component]);
-                
-            } else if (is_string($component)) {
+            } elseif (is_string($component)) {
 
-                $livewireAlias = \Livewire\Livewire::getAlias(ComponentWrapper::class);
-                return TabContainer::make($livewireAlias)->data(['rawComponent' => new \Illuminate\Support\HtmlString($component)]);
+                if (is_subclass_of($component, LivewireComponent::class)) {
+                    return TabContainer::make($component);
+                }
+
+                return TabContainer::make('tab-layout-plugin::component-wrapper')
+                    ->data(['rawComponent' => str($component)->toHtmlString()]);
+
+            } elseif (is_object($component)) {
+
+                // Check if the component is a Livewire component
+                if (is_subclass_of($component, LivewireComponent::class)) {
+                    return TabContainer::make(get_class($component))
+                        ->data($component->all());
+                }
+
+                return TabContainer::make('tab-layout-plugin::component-wrapper')
+                    ->data(['rawComponent' => $component]);
+
             }
 
             return null;
@@ -81,13 +88,13 @@ trait HasComponents
             function (TabContainer|TabLayoutComponent|TabsLayoutTab|LivewireComponent|null $component) {
                 if ($component && method_exists($component, 'isHidden')) {
                     return ! $component->isHidden();
-                }
-                else if ($component) {
-                    
+                } elseif ($component) {
+
                     return true;
                 }
+
                 return false;
-            } 
+            }
         );
     }
 
@@ -99,8 +106,7 @@ trait HasComponents
         $componentData = array_map(function ($data) {
             if (is_null($data)) {
                 return [];
-            }
-            else if (! is_array($data)) {
+            } elseif (! is_array($data)) {
                 return [$data];
             }
 

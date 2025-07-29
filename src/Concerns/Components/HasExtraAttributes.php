@@ -9,7 +9,7 @@ trait HasExtraAttributes
 {
     protected array $extraAttributes = [];
 
-    public function extraAttributes(array | Closure $attributes, bool $merge = false): static
+    public function extraAttributes(array|Closure $attributes, bool $merge = false): static
     {
         if ($merge) {
             $this->extraAttributes[] = $attributes;
@@ -22,7 +22,7 @@ trait HasExtraAttributes
 
     public function getExtraAttributes(): array
     {
-        $temporaryAttributeBag = new ComponentAttributeBag();
+        $temporaryAttributeBag = new ComponentAttributeBag;
 
         foreach ($this->extraAttributes as $extraAttributes) {
             $temporaryAttributeBag = $temporaryAttributeBag->merge($this->evaluate($extraAttributes));

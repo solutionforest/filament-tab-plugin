@@ -10,11 +10,11 @@ use SolutionForest\TabLayoutPlugin\Concerns\Components\HasComponentData;
 
 abstract class TabLayoutComponent
 {
-    use HasComponent;
-    use HasComponentData;
     use CanBeHidden;
     use CanSpanColumns;
     use EvaluatesClosures;
+    use HasComponent;
+    use HasComponentData;
 
     public static function make(): static
     {

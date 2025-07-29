@@ -2,15 +2,12 @@
 
 namespace SolutionForest\TabLayoutPlugin;
 
-use Filament\PluginServiceProvider;
 use Livewire\Livewire;
-use SolutionForest\TabLayoutPlugin\Commands;
-use SolutionForest\TabLayoutPlugin\Components;
 use SolutionForest\TabLayoutPlugin\Components\Tabs\ComponentWrapper;
-use SolutionForest\TabLayoutPlugin\Pages;
 use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class TabLayoutPluginServiceProvider extends PluginServiceProvider
+class TabLayoutPluginServiceProvider extends PackageServiceProvider
 {
     public static string $name = 'tab-layout-plugin';
 

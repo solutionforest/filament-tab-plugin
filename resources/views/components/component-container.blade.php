@@ -1,4 +1,4 @@
-<x-filament-support::grid
+<x-filament::grid
     :default="$getColumns('default')"
     :sm="$getColumns('sm')"
     :md="$getColumns('md')"
@@ -13,10 +13,9 @@
 
             $tabComponent = $tabContainer->getComponent();
             $data = $tabContainer->getData() ?? [];
-
         @endphp
 
-        <x-filament-support::grid.column
+        <x-filament::grid.column
             :default="$columns['default'] ?? null"
             :sm="$columns['sm'] ?? null"
             :md="$columns['md'] ?? null"
@@ -40,14 +39,9 @@
         >
 
             @if ($tabComponent)
-                @if ($tabComponent == \Livewire\Livewire::getAlias(\SolutionForest\TabLayoutPlugin\Components\Tabs\ComponentWrapper::class))
-                    @livewire($tabComponent, $data)
-                @else
-                    
-                    @livewire(\Livewire\Livewire::getAlias($tabComponent), $data)
-                @endif
+                @livewire($tabComponent, $data)
             @endif
 
-        </x-filament-support::grid.column>
+        </x-filament::grid.column>
     @endforeach
-</x-filament-support::grid>
+</x-filament::grid>

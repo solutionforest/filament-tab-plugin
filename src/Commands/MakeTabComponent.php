@@ -3,14 +3,14 @@
 namespace SolutionForest\TabLayoutPlugin\Commands;
 
 use Filament\Support\Commands\Concerns\CanManipulateFiles;
-use Filament\Support\Commands\Concerns\CanValidateInput;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+
+use function Laravel\Prompts\text;
 
 class MakeTabComponent extends Command
 {
     use CanManipulateFiles;
-    use CanValidateInput;
 
     protected $description = 'Creates a Filament tab component class.';
 
@@ -21,20 +21,26 @@ class MakeTabComponent extends Command
         $path = config('tab-layout-plugin.component.path', app_path('Filament/Tabs/Components'));
         $namespace = config('tab-layout-plugin.component.namespace', 'App\\Filament\\Tabs\\Components');
 
-        $name = (string) Str::of(strval($this->argument('name') ?? $this->askRequired('Name (e.g. `EditProductCategoryPage`)', 'name')))
+        $name = (string) Str::of(
+                strval($this->argument('name') ?? text(
+                    label: 'Name',
+                    placeholder: '(e.g. `EditProductCategoryPage`)',
+                    required: true
+                )),
+            )
             ->studly()
             ->trim('/')
             ->trim('\\')
             ->trim(' ')
             ->replace('/', '\\');
-        
+
         $path = (string) Str::of($name)
             ->prepend('/')
             ->replace('\\', '/')
             ->replace('//', '/')
             ->prepend($path)
             ->append('.php');
-        
+
         $class = (string) Str::of($name)
             ->prepend('\\')
             ->prepend($namespace);
@@ -42,7 +48,13 @@ class MakeTabComponent extends Command
         $classNamespace = Str::beforeLast($class, '\\');
         $className = Str::afterLast($class, '\\');
 
-        $component = (string) Str::of(strval($this->argument('component') ?? $this->askRequired('Component (e.g. `App\Filament\Resources\ProductCategoryResource\Pages\EditProductCategory`)', 'component')))
+        $component = (string) Str::of(
+                strval($this->argument('component') ?? text(
+                    label: 'Component',
+                    placeholder: '(e.g. `App\Filament\Resources\ProductCategoryResource\Pages\EditProductCategory`)', 
+                    required: true
+                ))
+            )
             ->replace('/', '\\');
 
         if (! $this->option('force') && $this->checkForCollision([$path])) {
@@ -60,7 +72,8 @@ class MakeTabComponent extends Command
 
         $this->info("Successfully created {$className} ! ");
 
-        $this->info("Make sure to register the component in `schema()` of any SolutionForest\\TabLayoutPlugin\\Components\\Tabs\\Tab.");
+        $this->info('Make sure to register the component in `schema()` of any SolutionForest\\TabLayoutPlugin\\Components\\Tabs\\Tab.');
+
         return static::SUCCESS;
     }
 }

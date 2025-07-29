@@ -2,15 +2,14 @@
 
 namespace SolutionForest\TabLayoutPlugin\Widgets;
 
-use Closure;
 use Filament\Widgets\Widget;
-use SolutionForest\TabLayoutPlugin\Concerns;
+use SolutionForest\TabLayoutPlugin\Concerns\Layouts\InteractsWithTab;
 
 class TabsWidget extends Widget
 {
-    use Concerns\Layouts\InteractsWithTab;
+    use InteractsWithTab;
 
     protected static string $view = 'tab-layout-plugin::widgets.tabs-widget';
 
-    protected int | string | array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 'full';
 }

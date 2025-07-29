@@ -6,9 +6,9 @@ use Closure;
 
 trait HasIcon
 {
-    protected string | Closure | null $icon = null;
+    protected string|Closure|null $icon = null;
 
-    public function icon(string | Closure | null $icon): static
+    public function icon(string|Closure|null $icon): static
     {
         $this->icon = $icon;
 

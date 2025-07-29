@@ -11,12 +11,15 @@ use SolutionForest\TabLayoutPlugin\Concerns\Components\HasComponentData;
 
 class ComponentWrapper extends Component
 {
-    use HasComponent;
-    use HasComponentData;
     use CanBeHidden;
     use CanSpanColumns;
     use EvaluatesClosures;
+    use HasComponent;
+    use HasComponentData;
 
+    /**
+     * @var null | string | object
+     */
     protected $rawComponent = null;
 
     public static function make(): static
@@ -26,13 +29,20 @@ class ComponentWrapper extends Component
         return $static;
     }
 
-    public function mount($rawComponent) 
+    /**
+     * @param null | string | object $rawComponent
+     * @return static
+     */
+    public function mount($rawComponent)
     {
         $this->rawComponent = $rawComponent;
 
         return $this;
     }
 
+    /**
+     * @return object|string|null
+     */
     public function getRawComponent()
     {
         return $this->rawComponent;

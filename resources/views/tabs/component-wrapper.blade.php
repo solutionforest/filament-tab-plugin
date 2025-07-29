@@ -1,6 +1,5 @@
-@php
-    $rawComponent = $this->getRawComponent() ?? null; 
-@endphp
-@if ($rawComponent)
-    {{ $rawComponent }}
-@endif
+<div class="filament-tabs-component-wrapper">
+    @if (($rawComponent = $this->getRawComponent()))
+        {{ $rawComponent }}
+    @endif
+</div>
