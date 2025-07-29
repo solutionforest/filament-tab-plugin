@@ -2,9 +2,9 @@
 
 namespace SolutionForest\TabLayoutPlugin\Widgets;
 
-use InvalidArgumentException;
 use Filament\Widgets\Widget;
 use Filament\Widgets\WidgetConfiguration;
+use InvalidArgumentException;
 
 class TabWidgetConfiguration extends WidgetConfiguration
 {

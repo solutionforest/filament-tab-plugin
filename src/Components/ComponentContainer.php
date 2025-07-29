@@ -2,12 +2,11 @@
 
 namespace SolutionForest\TabLayoutPlugin\Components;
 
+use Filament\Support\Components\ViewComponent;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\BelongsToParentComponent;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\CanBeHidden;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\HasColumns;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\HasComponents;
-use Filament\Support\Components\ViewComponent;
-use SolutionForest\TabLayoutPlugin\Concerns;
 
 class ComponentContainer extends ViewComponent
 {
