@@ -38,7 +38,7 @@
             ->merge($getExtraAttributes())
             ->class([
                 'filament-tabs-component rounded-xl shadow-sm border border-gray-300 bg-white',
-                'dark:bg-gray-800 dark:border-gray-700' => config('filament.dark_mode'),
+                'dark:bg-gray-800 dark:border-gray-700',
             ]) 
             ->merge([
                 "id=\"{$currentTabId}\"" => filled($currentTabId),
@@ -64,7 +64,7 @@
         role="tablist"
         @class([
             'filament-tabs-component-header rounded-t-xl flex overflow-y-auto bg-gray-100',
-            'dark:bg-gray-700' => config('filament.dark_mode'),
+            'dark:bg-gray-700',
         ])
     >
         @foreach ($getChildComponentContainer()->getComponents() as $tab)
@@ -85,8 +85,8 @@
                 x-bind:tabindex="tab === '{{ $tab->getId() }}' ? 0 : -1"
                 class="filament-tabs-component-button flex items-center gap-2 shrink-0 p-3 text-sm font-medium"
                 x-bind:class="{
-                    'text-gray-500 @if (config('filament.dark_mode')) dark:text-gray-400 @endif': tab !== '{{ $tab->getId() }}',
-                    'filament-tabs-component-button-active bg-white text-primary-600 @if (config('filament.dark_mode')) dark:bg-gray-800 @endif': tab === '{{ $tab->getId() }}',
+                    'text-gray-500 dark:text-gray-400': tab !== '{{ $tab->getId() }}',
+                    'filament-tabs-component-button-active bg-white text-primary-600 dark:bg-gray-800': tab === '{{ $tab->getId() }}',
                 }"
             >
                 @if ($icon = $tab->getIcon())
@@ -100,11 +100,17 @@
 
                 @if ($badge = $tab->getBadge())
                     <span
-                        class="inline-flex items-center justify-center ml-auto rtl:ml-0 rtl:mr-auto min-h-4 px-2 py-0.5 text-xs font-medium tracking-tight rounded-xl whitespace-normal"
+                        class="flex items-center justify-center gap-x-1 rounded-md text-xs font-medium ring-1 ring-inset px-1.5 min-w-[theme(spacing.5)] py-0.5 tracking-tight"
                         x-bind:class="{
-                            'bg-gray-200 @if (config('filament.dark_mode')) dark:bg-gray-600 @endif': tab !== '{{ $tab->getId() }}',
-                            'bg-primary-500/10 font-medium': tab === '{{ $tab->getId() }}',
+                            'bg-gray-200 dark:bg-gray-600': tab !== '{{ $tab->getId() }}',
+                            'fi-color-custom bg-custom-50 text-custom-600 ring-custom-600/10 dark:bg-custom-400/10 dark:text-custom-400 dark:ring-custom-400/30 fi-color-primary font-medium': tab === '{{ $tab->getId() }}',
                         }"
+                        @style([
+                            \Filament\Support\get_color_css_variables(
+                                'primary',
+                                shades: [50, 400, 600],
+                            )
+                        ])
                     >
                         {{ $badge }}
                     </span>
