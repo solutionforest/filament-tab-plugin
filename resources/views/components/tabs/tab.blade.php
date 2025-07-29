@@ -5,14 +5,21 @@
     $generatedLivewireKey = "{$livewireId}." . Tab::class . ".tabs.{$currentTabId}";
 @endphp
 <div
-    aria-labelledby="{{ $currentTabId }}"
-    id="{{ $currentTabId }}"
-    role="tabpanel"
-    tabindex="0"
     x-bind:class="{ 
-        'invisible h-0 p-0 overflow-y-hidden': tab !== '{{ $currentTabId }}', 
-        'p-6': tab === '{{ $currentTabId }}' 
+        'fi-active': tab == @js($currentTabId),
     }"
+    x-on:expand="tab = @js($currentTabId)"
+    {{ $attributes
+        ->merge($getExtraAttributes())
+        ->merge([
+            'aria-labelledby' => $currentTabId,
+            'id' => $currentTabId,
+            'role' => 'tabpanel',
+            'tabindex' => '0',
+            'wire:key' => $generatedLivewireKey,
+        ], escape: false)
+        ->class(['filament-tabs-component-tab fi-sc-tabs-tab']) 
+    }}
     x-on:expand-concealing-component.window="
         error = $el.querySelector('[data-validation-error]')
 
@@ -28,8 +35,6 @@
 
         setTimeout(() => $el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' }), 200)
     "
-    {{ $attributes->merge($getExtraAttributes())->class(['filament-tabs-component-tab outline-none']) }}
-    wire:key="{{ $generatedLivewireKey }}"
 >
     {{ $getChildComponentContainer() }}
 </div>

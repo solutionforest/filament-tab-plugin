@@ -2,6 +2,8 @@
 
 namespace SolutionForest\TabLayoutPlugin;
 
+use SolutionForest\TabLayoutPlugin\Commands\MakeTabWidgetCommand;
+use SolutionForest\TabLayoutPlugin\Commands\MakeTabComponent;
 use Livewire\Livewire;
 use SolutionForest\TabLayoutPlugin\Components\Tabs\ComponentWrapper;
 use Spatie\LaravelPackageTools\Package;
@@ -22,8 +24,8 @@ class TabLayoutPluginServiceProvider extends PackageServiceProvider
     protected function getCommands(): array
     {
         return [
-            Commands\MakeTabWidgetCommand::class,
-            Commands\MakeTabComponent::class,
+            MakeTabWidgetCommand::class,
+            MakeTabComponent::class,
         ];
     }
 

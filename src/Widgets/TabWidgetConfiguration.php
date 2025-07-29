@@ -2,6 +2,7 @@
 
 namespace SolutionForest\TabLayoutPlugin\Widgets;
 
+use InvalidArgumentException;
 use Filament\Widgets\Widget;
 use Filament\Widgets\WidgetConfiguration;
 
@@ -24,7 +25,7 @@ class TabWidgetConfiguration extends WidgetConfiguration
                 $item = TabWidgetContentConfiguration::parseFormArray($item);
             }
             if (! ($item instanceof TabWidgetContentConfiguration)) {
-                throw new \InvalidArgumentException('Each tab must be an instance of '.TabWidgetContentConfiguration::class.'.');
+                throw new InvalidArgumentException('Each tab must be an instance of '.TabWidgetContentConfiguration::class.'.');
             }
             $computedTabs[] = $item->toArray();
         }
@@ -47,7 +48,7 @@ class TabWidgetConfiguration extends WidgetConfiguration
         } elseif ($tab instanceof TabWidgetContentConfiguration) {
             $computedTab = $tab->toArray();
         } else {
-            throw new \InvalidArgumentException('Each tab must be an instance of '.TabWidgetContentConfiguration::class.' or a valid array configuration.');
+            throw new InvalidArgumentException('Each tab must be an instance of '.TabWidgetContentConfiguration::class.' or a valid array configuration.');
         }
 
         if ($computedTab) {

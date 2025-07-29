@@ -2,15 +2,19 @@
 
 namespace SolutionForest\TabLayoutPlugin\Components;
 
+use SolutionForest\TabLayoutPlugin\Concerns\Components\BelongsToParentComponent;
+use SolutionForest\TabLayoutPlugin\Concerns\Components\CanBeHidden;
+use SolutionForest\TabLayoutPlugin\Concerns\Components\HasColumns;
+use SolutionForest\TabLayoutPlugin\Concerns\Components\HasComponents;
 use Filament\Support\Components\ViewComponent;
 use SolutionForest\TabLayoutPlugin\Concerns;
 
 class ComponentContainer extends ViewComponent
 {
-    use Concerns\Components\BelongsToParentComponent;
-    use Concerns\Components\CanBeHidden;
-    use Concerns\Components\HasColumns;
-    use Concerns\Components\HasComponents;
+    use BelongsToParentComponent;
+    use CanBeHidden;
+    use HasColumns;
+    use HasComponents;
 
     protected array $meta = [];
 
