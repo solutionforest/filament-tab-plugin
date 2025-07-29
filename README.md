@@ -1,8 +1,3 @@
-> [!IMPORTANT]
-> We will archive this project since filament3 supports tabs now.
-> https://beta.filamentphp.com/docs/3.x/infolists/layout/tabs
-
-
 # Tab Layout Plugin
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/solution-forest/tab-layout-plugin.svg?style=flat-square)](https://packagist.org/packages/solution-forest/tab-layout-plugin)
@@ -35,6 +30,8 @@ php artisan vendor:publish --tag="tab-layout-plugin-views"
 
 ## Usage
 
+### Tab widget
+
 To build `Tab` widget: 
 ```php
 php artisan make:filament-tab-widget DummyTabs
@@ -42,6 +39,9 @@ php artisan make:filament-tab-widget DummyTabs
 
 You will then define the child component 'schema()' to display inside:
 ```php
+
+namespace App\Filament\Widgets;
+
 use SolutionForest\TabLayoutPlugin\Components\Tabs\Tab as TabLayoutTab;
 use SolutionForest\TabLayoutPlugin\Components\Tabs\TabContainer;
 use SolutionForest\TabLayoutPlugin\Widgets\TabsWidget as BaseWidget;
@@ -55,7 +55,9 @@ class DummyTabs extends BaseWidget
                 ->icon('heroicon-o-bell') 
                 ->badge('39')
                 ->schema([
+                    // Display livewire component
                     TabContainer::make(\Filament\Widgets\AccountWidget::class),
+                    // Display html
                     str('
 ## This is a dummy html code inside tab
 
@@ -67,17 +69,30 @@ echo "This is a code block";
                 ]),
             TabLayoutTab::make('Label 2')
                 ->schema([
+                    // Display raw string
+                    'Raw string here',
+
+                    // Display livewire 
+                    app(\App\Livewire\Dummy::class, ['__id' => uniqid() . '-dummy']),
+
+                    // Display livewire with filling data
+                    TabContainer::make(\App\Filament\Resources\UserResource\Pages\EditUser::class)  //TARGET COMPONENT
+                        ->data(['record' => 1]),    // TARGET COMPONENT'S DATA
+
                     TabContainer::make(\Filament\Widgets\AccountWidget::class)
                         ->columnSpan(1),
                     TabContainer::make(\Filament\Widgets\AccountWidget::class)
                         ->columnSpan(1),
                 ])
                 ->columns(2),
+            // Hyper link
             TabLayoutTab::make('Go To Filamentphp (Link)')->url("https://filamentphp.com/", true),
         ];
     }
 }
 ```
+
+#### Customize the icon and bage
 
 Tabs may have an icon and badge, which you can set using the `icon()` and `badge()` methods:
 ```php
@@ -89,7 +104,7 @@ Tab::make('Label 1')
     ]),
 ```
 
-## Assign parameters to component
+#### Assign parameters to component
 Additionally, you have the option to pass an array of data to your component.
 ```php
 protected function schema(): array
@@ -113,6 +128,23 @@ protected function schema(): array
 ![tab-example-1](https://github.com/solutionforest/filament-tab-plugin/assets/68525320/1061acbb-cfdf-422f-8c2f-1c0f709ecf7f)
 ![tab-example-2](https://github.com/solutionforest/filament-tab-plugin/assets/68525320/23898112-9d25-4260-bed1-081e679b8b68)
 
+
+Then, add the tab widget to your page, e.g. 
+```php
+// on App\Resources\UserResource\ListUsers.php
+
+class ListUsers extends ListRecords
+{
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            \App\Filament\Widgets\DummyTabs::class,
+        ];
+    }
+}
+```
+
+#### Make a own tab container
 
 In addition to using the `TabContainer` component, you can create your own custom tab layout components by extending the `TabLayoutComponent` class or using command `php artisan tab-layout:component`.
 
@@ -157,6 +189,57 @@ protected function schema(): array
 }
 ```
 
+### Create a dynamic tab widget
+
+You can render multiple livewire components inside a tab widget by using the `TabsWidget::make()` method:
+
+```php
+// on App\Resources\UserResource\ListUsers.php
+
+use SolutionForest\TabLayoutPlugin\Widgets\TabsWidget;
+use SolutionForest\TabLayoutPlugin\Widgets\TabWidgetContentConfiguration;
+
+class ListUsers extends ListRecords
+{
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            TabsWidget::make([
+                // Method 1: Using TabWidgetContentConfiguration object
+                new TabWidgetContentConfiguration(
+                    component: \Filament\Widgets\AccountWidget::class,
+                    params: [],
+                    tabKey: 'account_widget',
+                    tabLabel: 'Account Widget',
+                ),
+                
+                // Method 2: Using array syntax
+                [
+                    'component' => \App\Filament\Resources\UserResource\Pages\EditUser::class,
+                    'params' => ['record' => 1], // Pass parameters to livewire component
+                    'tabKey' => 'edit_user',
+                    'tabLabel' => 'Edit User',
+                ]
+            ])
+            // Method 3: Using the tab() method to add additional tabs
+            ->tab(
+                new TabWidgetContentConfiguration(
+                    component: \Filament\Widgets\FilamentInfoWidget::class,
+                    params: [],
+                    tabKey: 'filament_info_widget',
+                    tabLabel: 'Filament Info Widget',
+                ),
+            ),
+        ];
+    }
+}
+```
+
+This approach gives you three ways to configure tabs:
+1. **TabWidgetContentConfiguration object** - Most explicit and type-safe
+2. **Array syntax** - Simpler for basic configurations
+3. **Chain tab() method** - Useful for adding tabs conditionally
+```
 
 ## Changelog
 
