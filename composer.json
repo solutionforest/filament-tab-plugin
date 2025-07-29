@@ -41,6 +41,11 @@
             "SolutionForest\\TabLayoutPlugin\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "SolutionForest\\TabLayoutPlugin\\Tests\\": "tests/src"
+        }
+    },
     "scripts": {
         "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
         "analyse": "vendor/bin/phpstan analyse",
