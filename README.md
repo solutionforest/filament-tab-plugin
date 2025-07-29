@@ -14,6 +14,15 @@ Demo site : https://filament-cms-website-demo.solutionforest.net/admin
 Demo username : demo@solutionforest.net
 
 Demo password : 12345678 Auto Reset every hour.
+
+
+## Supported Filament versions
+| Filament Version | Plugin Version |
+|------------------|----------------|
+| v2               | <=1.x.x |
+| v3               | 2.x.x          |
+| v4               | 3.x.x-beta    |
+
 ## Installation
 
 You can install the package via composer:
