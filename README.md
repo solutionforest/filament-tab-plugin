@@ -92,7 +92,7 @@ echo "This is a code block";
 }
 ```
 
-#### Customize the icon and bage
+#### Customize the icon and badge
 
 Tabs may have an icon and badge, which you can set using the `icon()` and `badge()` methods:
 ```php
@@ -239,7 +239,6 @@ This approach gives you three ways to configure tabs:
 1. **TabWidgetContentConfiguration object** - Most explicit and type-safe
 2. **Array syntax** - Simpler for basic configurations
 3. **Chain tab() method** - Useful for adding tabs conditionally
-```
 
 ## Changelog
 
