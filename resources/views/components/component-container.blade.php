@@ -10,8 +10,11 @@
                 'lg' => $getColumns('lg'),
                 'xl' => $getColumns('xl'),
                 '2xl' => $getColumns('2xl'),
-            ], GridDirection::Column)
-            ->class(['filament-component-container gap-6'])
+            ], GridDirection::Row)
+            ->class(['filament-component-container'])
+            ->style([
+                'gap: 1rem;',
+            ])
     }}
 >
     @foreach ($getComponents(withHidden: false) as $tabContainer)
