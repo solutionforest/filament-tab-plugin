@@ -41,13 +41,39 @@ php artisan vendor:publish --tag="tab-layout-plugin-views"
 
 ### Create a Simple Tab Widget
 
-You can create one Livewire component in each tab by using the `TabsWidget::make()` method:
+Create tabbed interfaces with individual Livewire components using the `TabsWidget::make()` method. This is the quickest way to get started with basic tab functionality.
+
+#### Step 1: Register the TabsWidget
+
+First, register the `TabsWidget` in your Filament panel provider:
 
 ```php
-// In App\Resources\UserResource\ListUsers.php
+<?php
 
+namespace App\Providers\Filament;
+
+use Filament\Panel;
+use Filament\PanelProvider;
+
+class AdminPanelProvider extends PanelProvider
+{
+    public function panel(Panel $panel): Panel
+    {
+        return $panel
+            ->widgets([
+                \SolutionForest\TabLayoutPlugin\Widgets\TabsWidget::class,
+            ]);
+    }
+}
+```
+
+#### Step 2: Implement in Your Resource
+
+```php
+// In App\Filament\Resources\Users\Pages\ListUsers.php
+
+use SolutionForest\TabLayoutPlugin\Schemas\SimpleTabSchema;
 use SolutionForest\TabLayoutPlugin\Widgets\TabsWidget;
-use SolutionForest\TabLayoutPlugin\Widgets\TabWidgetContentConfiguration;
 
 class ListUsers extends ListRecords
 {
@@ -55,31 +81,19 @@ class ListUsers extends ListRecords
     {
         return [
             TabsWidget::make([
-                // Method 1: Using TabWidgetContentConfiguration object
-                new TabWidgetContentConfiguration(
-                    component: \Filament\Widgets\AccountWidget::class,
-                    params: [],
-                    tabKey: 'account_widget',
-                    tabLabel: 'Account Widget',
-                ),
-                
-                // Method 2: Using array syntax
-                [
-                    'component' => \App\Filament\Resources\UserResource\Pages\EditUser::class,
-                    'params' => ['record' => 1], // Pass parameters to the Livewire component
-                    'tabKey' => 'edit_user',
-                    'tabLabel' => 'Edit User',
-                ]
-            ])
-            // Method 3: Using the tab() method to add additional tabs
-            ->tab(
-                new TabWidgetContentConfiguration(
-                    component: \Filament\Widgets\FilamentInfoWidget::class,
-                    params: [],
-                    tabKey: 'filament_info_widget',
-                    tabLabel: 'Filament Info Widget',
-                ),
-            ),
+                SimpleTabSchema::make(
+                    label: 'Account Widget',
+                    id: 'account_widget',
+                )->livewireComponent(\Filament\Widgets\AccountWidget::class),
+
+                SimpleTabSchema::make(
+                    label: 'Edit User',
+                )->livewireComponent(\App\Filament\Resources\Users\Pages\EditUser::class, ['record' => 1]),
+
+                SimpleTabSchema::make('Link')
+                    ->url('https://example.com', true)
+                    ->icon('heroicon-o-globe-alt'),
+            ]),
         ];
     }
 }
@@ -105,7 +119,6 @@ You will then define the child components in the `schema()` method to display in
 namespace App\Filament\Widgets;
 
 use SolutionForest\TabLayoutPlugin\Components\Tabs\Tab as TabLayoutTab;
-use 
 use SolutionForest\TabLayoutPlugin\Schemas\Components\LivewireContainer;
 use SolutionForest\TabLayoutPlugin\Schemas\Components\TabContentContainer;
 use SolutionForest\TabLayoutPlugin\Widgets\TabsWidget as BaseWidget;
@@ -245,7 +258,12 @@ class DummyTabs extends BaseWidget
 
 #### Persist Active Tab in URL
 
-Keep the selected tab active when users reload the page or share URLs by persisting the tab state in the query string.
+Maintain the selected tab state when users reload the page or share URLs. This feature saves the active tab in the browser's query string, providing a better user experience.
+
+**Requirements:**
+- Each tab must have a unique `id`
+- The tab group needs an `id` attribute
+- Define a Livewire property to store the active tab state
 
 ```php
 use SolutionForest\TabLayoutPlugin\Components\Tabs;
@@ -254,10 +272,10 @@ use SolutionForest\TabLayoutPlugin\Widgets\TabsWidget as BaseWidget;
 
 class DummyTabs extends BaseWidget
 {
-    // Define the property that will store the active tab
+    // Property to store the active tab state
     public $activeTab = '';
 
-    // Enable Livewire query string binding
+    // Enable Livewire query string binding for URL persistence
     public function queryString()
     {
         return ['activeTab'];
@@ -267,11 +285,11 @@ class DummyTabs extends BaseWidget
     {
         return $tabs
             ->id('dummy-tabs') // Required: unique ID for the tab group
-            // Dynamic: Use a callback to get the query parameter name
+            // Option 1: Use a callback to determine the query parameter name
             ->persistTabInQueryString(function ($component, $livewire) {
                 return 'activeTab'; // Property name to sync with URL
             })
-            // Static: Direct property name for URL persistence
+            // Option 2: Direct property name for URL persistence
             ->persistTabInQueryString('activeTab');
     }
     
