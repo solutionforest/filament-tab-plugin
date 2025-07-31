@@ -218,6 +218,79 @@ class ListUsers extends ListRecords
 }
 ```
 
+#### Set Default Active Tab
+
+Control which tab is active when the widget loads. You can set this either dynamically with a callback or with a static tab order.
+
+```php
+use SolutionForest\TabLayoutPlugin\Components\Tabs;
+use SolutionForest\TabLayoutPlugin\Widgets\TabsWidget as BaseWidget;
+
+class DummyTabs extends BaseWidget
+{
+    public static function tabs(Tabs $tabs): Tabs
+    {
+        return $tabs
+            // Dynamic: Use a callback to determine the active tab 
+            ->activeTab(function (self $livewire, Tabs $component): int {
+                return 2; // Second tab will be active
+            })
+            // Static: Set a specific tab as active by order
+            ->activeTab(2); // Second tab will be active
+    }
+}
+```
+
+#### Persist Active Tab in URL
+
+Keep the selected tab active when users reload the page or share URLs by persisting the tab state in the query string.
+
+```php
+use SolutionForest\TabLayoutPlugin\Components\Tabs;
+use SolutionForest\TabLayoutPlugin\Components\Tabs\Tab as TabLayoutTab;
+use SolutionForest\TabLayoutPlugin\Widgets\TabsWidget as BaseWidget;
+
+class DummyTabs extends BaseWidget
+{
+    // Define the property that will store the active tab
+    public $activeTab = '';
+
+    // Enable Livewire query string binding
+    public function queryString()
+    {
+        return ['activeTab'];
+    }
+
+    public static function tabs(Tabs $tabs): Tabs
+    {
+        return $tabs
+            ->id('dummy-tabs') // Required: unique ID for the tab group
+            // Dynamic: Use a callback to get the query parameter name
+            ->persistTabInQueryString(function ($component, $livewire) {
+                return 'activeTab'; // Property name to sync with URL
+            })
+            // Static: Direct property name for URL persistence
+            ->persistTabInQueryString('activeTab');
+    }
+    
+    protected function schema(): array
+    {
+        return [
+            TabLayoutTab::make(label: 'Tab 1', id: 'sample-1')
+                ->schema([
+                    // Tab 1 content...
+                ]),
+            TabLayoutTab::make(label: 'Tab 2', id: 'sample-2')
+                ->schema([
+                    // Tab 2 content...
+                ]),
+        ];
+    }
+}
+```
+
+> **Note:** When using URL persistence, each tab must have a unique `id` and the tab group needs an `id` attribute.
+
 #### Create Your Own Tab Container
 
 In addition to using the `TabContainer` component, you can create your own custom tab layout components by extending the `TabLayoutComponent` class or using the `php artisan tab-layout:component` command.
