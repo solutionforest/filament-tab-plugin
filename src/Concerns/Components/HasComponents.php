@@ -8,7 +8,6 @@ use SolutionForest\TabLayoutPlugin\Components\FilamentComponent;
 use SolutionForest\TabLayoutPlugin\Components\Tabs\Tab as TabsLayoutTab;
 use SolutionForest\TabLayoutPlugin\Components\Tabs\TabContainer;
 use SolutionForest\TabLayoutPlugin\Components\Tabs\TabLayoutComponent;
-use SolutionForest\TabLayoutPlugin\Concerns\Components\BelongsToContainer;
 
 trait HasComponents
 {
@@ -45,8 +44,8 @@ trait HasComponents
         $components = array_map(function ($component) {
 
             if (
-                $component instanceof FilamentComponent || 
-                $component instanceof TabContainer || 
+                $component instanceof FilamentComponent ||
+                $component instanceof TabContainer ||
                 $component instanceof TabLayoutComponent
             ) {
 

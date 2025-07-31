@@ -44,7 +44,7 @@ trait InteractsWithTab
     public function getTabs(): Tabs
     {
         $id = method_exists($this, 'getId') ? $this->getId() : uniqid();
-        
+
         return Tabs::make($id)
             ->tabs(function () {
                 $tabs = $this->convertTabComponents($this->tabComponents);

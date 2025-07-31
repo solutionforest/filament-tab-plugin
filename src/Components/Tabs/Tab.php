@@ -11,9 +11,9 @@ use SolutionForest\TabLayoutPlugin\Concerns\Components\HasIcon;
 
 class Tab extends FilamentComponent
 {
+    use BelongsToContainer;
     use HasBadge;
     use HasIcon;
-    use BelongsToContainer;
 
     protected string $view = 'tab-layout-plugin::components.tabs.tab';
 

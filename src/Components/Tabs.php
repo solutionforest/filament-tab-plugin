@@ -78,7 +78,7 @@ class Tabs extends FilamentComponent
             }
 
             foreach ($this->getChildComponentContainer()->getComponents() as $index => $tab) {
-                
+
                 if ($tab->getId() !== $queryStringTab) {
                     continue;
                 }
