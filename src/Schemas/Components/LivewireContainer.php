@@ -9,7 +9,7 @@ use SolutionForest\TabLayoutPlugin\Concerns\Components\CanSpanColumns;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\HasComponent;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\HasComponentData;
 
-class LivewireContainer// extends ViewComponent
+class LivewireContainer // extends ViewComponent
 {
     use CanBeHidden;
     use CanSpanColumns;
