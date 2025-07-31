@@ -5,6 +5,7 @@ namespace SolutionForest\TabLayoutPlugin\Concerns\Layouts;
 use SolutionForest\TabLayoutPlugin\Components\Tabs;
 use SolutionForest\TabLayoutPlugin\Components\Tabs\Tab;
 use SolutionForest\TabLayoutPlugin\Components\Tabs\TabContainer;
+use SolutionForest\TabLayoutPlugin\Contracts\HasTabs;
 use SolutionForest\TabLayoutPlugin\Widgets\TabWidgetContentConfiguration;
 
 trait InteractsWithTab
@@ -17,7 +18,10 @@ trait InteractsWithTab
 
     public function mountInteractsWithTab(): void
     {
-        $this->tabs = $this->getTabs();
+        $this->tabs = static::tabs($this->getTabs());
+        if ($this instanceof HasTabs) {
+            $this->tabs->livewire($this);
+        }
     }
 
     public static function tabs(Tabs $tabs): Tabs
@@ -39,7 +43,9 @@ trait InteractsWithTab
 
     public function getTabs(): Tabs
     {
-        return Tabs::make()
+        $id = method_exists($this, 'getId') ? $this->getId() : uniqid();
+        
+        return Tabs::make($id)
             ->tabs(function () {
                 $tabs = $this->convertTabComponents($this->tabComponents);
                 if (method_exists($this, 'schema') && ($schema = $this->schema()) && is_array($schema)) {

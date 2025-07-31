@@ -3,7 +3,7 @@
 namespace SolutionForest\TabLayoutPlugin\Components;
 
 use Filament\Support\Components\ViewComponent;
-use SolutionForest\TabLayoutPlugin\Concerns\Components\BelongsToContainer;
+// use SolutionForest\TabLayoutPlugin\Concerns\Components\BelongsToContainer;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\CanBeHidden;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\CanSpanColumns;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\HasChildComponents;
@@ -15,7 +15,7 @@ use SolutionForest\TabLayoutPlugin\Concerns\Components\HasMaxWidth;
 
 class FilamentComponent extends ViewComponent
 {
-    use BelongsToContainer;
+    // use BelongsToContainer;
     use CanBeHidden;
     use CanSpanColumns;
     use HasChildComponents;

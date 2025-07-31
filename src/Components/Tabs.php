@@ -4,6 +4,7 @@ namespace SolutionForest\TabLayoutPlugin\Components;
 
 use Closure;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
+use SolutionForest\TabLayoutPlugin\Contracts\HasTabs;
 
 class Tabs extends FilamentComponent
 {
@@ -15,17 +16,26 @@ class Tabs extends FilamentComponent
 
     protected string|Closure|null $tabQueryStringKey = null;
 
-    public function __construct()
+    protected ?HasTabs $livewire = null;
+
+    public function __construct($id = null)
     {
-        $this->id(uniqid());
+        $this->id($id ?? uniqid());
     }
 
-    public static function make(): static
+    public static function make($id = null): static
     {
-        $static = app(static::class);
+        $static = app(static::class, ['id' => $id]);
         $static->configure();
 
         return $static;
+    }
+
+    public function livewire(HasTabs $livewire): static
+    {
+        $this->livewire = $livewire;
+
+        return $this;
     }
 
     public function tabs(array|Closure $tabs): static
@@ -42,12 +52,33 @@ class Tabs extends FilamentComponent
         return $this;
     }
 
+    public function getLivewire(): ?HasTabs
+    {
+        return $this->livewire;
+    }
+
     public function getActiveTab(): int
     {
         if ($this->isTabPersistedInQueryString()) {
-            $queryStringTab = request()->query($this->getTabQueryStringKey());
+
+            // $queryStringTab = request()->query($this->getTabQueryStringKey());
+            $tabQueryStringKey = $this->getTabQueryStringKey();
+            $queryStringTab = null;
+            try {
+                if (
+                    filled($tabQueryStringKey) &&
+                    ($livewire = $this->getLivewire()) &&
+                    ($livewire instanceof \Livewire\Component) &&
+                    (property_exists($livewire, $tabQueryStringKey))
+                ) {
+                    $queryStringTab = $livewire->{$tabQueryStringKey};
+                }
+            } catch (\Throwable $th) {
+                // Skip
+            }
 
             foreach ($this->getChildComponentContainer()->getComponents() as $index => $tab) {
+                
                 if ($tab->getId() !== $queryStringTab) {
                     continue;
                 }
@@ -74,5 +105,13 @@ class Tabs extends FilamentComponent
         $this->tabQueryStringKey = $key;
 
         return $this;
+    }
+
+    protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
+    {
+        return match ($parameterName) {
+            'livewire' => [$this->getLivewire()],
+            default => parent::resolveDefaultClosureDependencyForEvaluationByName($parameterName),
+        };
     }
 }
