@@ -1,3 +1,5 @@
+@use('Illuminate\View\Component', 'ViewComponent')
+@use('SolutionForest\TabLayoutPlugin\Schemas\Components\LivewireContainer')
 <x-filament::grid
     :default="$getColumns('default')"
     :sm="$getColumns('sm')"
@@ -10,9 +12,6 @@
     @foreach ($getComponents(withHidden: false) as $tabContainer)
         @php
             $columns = $tabContainer->getColumnSpan() ?? [];
-
-            $tabComponent = $tabContainer->getComponent();
-            $data = $tabContainer->getData() ?? [];
         @endphp
 
         <x-filament::grid.column
@@ -37,11 +36,16 @@
                 default => $maxWidth,
             } : null"
         >
-
-            @if ($tabComponent)
-                @livewire($tabComponent, $data)
-            @endif
-
+            @if ($tabContainer instanceof ViewComponent)
+                {{ $tabContainer->render() }}
+            @else
+                @php
+                    $livewireComponent = $tabContainer->getComponent();
+                @endphp
+                @if ($livewireComponent)
+                    @livewire($livewireComponent, $tabContainer->getData() ?? [])
+                @endif
+             @endif
         </x-filament::grid.column>
     @endforeach
 </x-filament::grid>

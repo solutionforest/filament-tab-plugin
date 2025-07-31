@@ -105,7 +105,8 @@ You will then define the child components in the `schema()` method to display in
 namespace App\Filament\Widgets;
 
 use SolutionForest\TabLayoutPlugin\Components\Tabs\Tab as TabLayoutTab;
-use SolutionForest\TabLayoutPlugin\Components\Tabs\TabContainer;
+use SolutionForest\TabLayoutPlugin\Schemas\Components\LivewireContainer;
+use SolutionForest\TabLayoutPlugin\Schemas\Components\TabContentContainer;
 use SolutionForest\TabLayoutPlugin\Widgets\TabsWidget as BaseWidget;
 
 class DummyTabs extends BaseWidget
@@ -120,7 +121,7 @@ class DummyTabs extends BaseWidget
                 ->schema([
 
                     // Display Livewire component
-                    TabContainer::make(\Filament\Widgets\AccountWidget::class),
+                    LivewireContainer::make(\Filament\Widgets\AccountWidget::class),
 
                     // Display HTML
                     str('
@@ -143,13 +144,13 @@ echo "This is a code block";
                     app(\App\Livewire\Dummy::class, ['__id' => uniqid() . '-dummy']),
 
                     // Display Livewire component with data
-                    TabContainer::make(\App\Filament\Resources\UserResource\Pages\EditUser::class)
+                    LivewireContainer::make(\App\Filament\Resources\UserResource\Pages\EditUser::class)
                         ->data(['record' => 1]),
 
-                    TabContainer::make(\Filament\Widgets\AccountWidget::class)
+                    LivewireContainer::make(\Filament\Widgets\AccountWidget::class)
                         ->columnSpan(1),
 
-                    TabContainer::make(\Filament\Widgets\AccountWidget::class)
+                    LivewireContainer::make(\Filament\Widgets\AccountWidget::class)
                         ->columnSpan(1),
                 ])
                 ->columns(2),
@@ -184,17 +185,17 @@ protected function schema(): array
             ->icon('heroicon-o-bell')
             ->badge('39')
             ->schema([
-                TabContainer::make(\Filament\Widgets\AccountWidget::class),
+                LivewireContainer::make(\Filament\Widgets\AccountWidget::class),
                 
                 // Display Livewire component with data
-                TabContainer::make(ViewProductCategory::class)
+                LivewireContainer::make(ViewProductCategory::class)
                     // The Data of target component
                     ->data(['record' => 1]),    
             ]),
 
         TabLayoutTab::make('Label 2')
             ->schema([
-                TabContainer::make(\Filament\Widgets\FilamentInfoWidget::class),
+                LivewireContainer::make(\Filament\Widgets\FilamentInfoWidget::class),
             ]),
     ];
 }
@@ -293,7 +294,7 @@ class DummyTabs extends BaseWidget
 
 #### Create Your Own Tab Container
 
-In addition to using the `TabContainer` component, you can create your own custom tab layout components by extending the `TabLayoutComponent` class or using the `php artisan tab-layout:component` command.
+In addition to using the `LivewireContainer` component, you can create your own custom tab layout components by extending the `TabLayoutComponent` class or using the `php artisan tab-layout:component` command.
 
 For example, the following PHP code defines a FilamentInfoWidget class that extends TabLayoutComponent and specifies a `ComponentTabComponent` as the tab component to use. The **getData** method can be used to populate the component with data.
 ```php
