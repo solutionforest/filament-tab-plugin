@@ -1,0 +1,242 @@
+name: "Manual Release"
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., 2.2.0)'
+        required: true
+        type: string
+      release_type:
+        description: 'Type of release'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      prerelease:
+        description: 'Mark as pre-release'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  create-manual-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate version
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Error: Version must be in format X.Y.Z (e.g., 2.2.0)"
+            exit 1
+          fi
+
+      - name: Generate Release Notes
+        id: generate_notes
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          
+          # Get the latest tag
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -z "$LATEST_TAG" ]; then
+            echo "No previous releases found. Generating initial release notes..."
+            COMMITS=$(git log --pretty=format:"- %s (%h)" --reverse)
+          else
+            echo "Generating release notes since $LATEST_TAG..."
+            COMMITS=$(git log ${LATEST_TAG}..HEAD --pretty=format:"- %s (%h)" --reverse)
+          fi
+          
+          # Count different types of changes
+          TOTAL_COMMITS=$(echo "$COMMITS" | wc -l)
+          FEATURES=$(echo "$COMMITS" | grep -c "feat" || echo "0")
+          FIXES=$(echo "$COMMITS" | grep -c "fix" || echo "0")
+          BREAKING=$(echo "$COMMITS" | grep -c -E "(BREAKING CHANGE|!:)" || echo "0")
+          
+          # Build categorized release notes
+          RELEASE_NOTES="## 🎉 Release $VERSION"$'\n\n'
+          
+          if [ "$TOTAL_COMMITS" -eq 0 ]; then
+            RELEASE_NOTES="$RELEASE_NOTES""No changes since last release."$'\n\n'
+          else
+            RELEASE_NOTES="$RELEASE_NOTES""This release includes $TOTAL_COMMITS commits with:"$'\n'
+            RELEASE_NOTES="$RELEASE_NOTES""- 🆕 **$FEATURES** new features"$'\n'
+            RELEASE_NOTES="$RELEASE_NOTES""- 🐛 **$FIXES** bug fixes"$'\n'
+            if [ "$BREAKING" -gt 0 ]; then
+              RELEASE_NOTES="$RELEASE_NOTES""- 💥 **$BREAKING** breaking changes"$'\n'
+            fi
+            RELEASE_NOTES="$RELEASE_NOTES"$'\n'
+            
+            # Categorize commits
+            BREAKING_CHANGES=""
+            FEATURES_LIST=""
+            FIXES_LIST=""
+            OTHER_CHANGES=""
+            
+            while IFS= read -r commit; do
+              if [ -n "$commit" ]; then
+                if echo "$commit" | grep -qE "(BREAKING CHANGE|!:)"; then
+                  BREAKING_CHANGES="$BREAKING_CHANGES$commit"$'\n'
+                elif echo "$commit" | grep -qE "feat"; then
+                  FEATURES_LIST="$FEATURES_LIST$commit"$'\n'
+                elif echo "$commit" | grep -qE "fix"; then
+                  FIXES_LIST="$FIXES_LIST$commit"$'\n'
+                else
+                  OTHER_CHANGES="$OTHER_CHANGES$commit"$'\n'
+                fi
+              fi
+            done <<< "$COMMITS"
+            
+            # Add sections
+            if [ -n "$BREAKING_CHANGES" ]; then
+              RELEASE_NOTES="$RELEASE_NOTES### 💥 Breaking Changes"$'\n\n'"$BREAKING_CHANGES"$'\n'
+            fi
+            
+            if [ -n "$FEATURES_LIST" ]; then
+              RELEASE_NOTES="$RELEASE_NOTES### ✨ New Features"$'\n\n'"$FEATURES_LIST"$'\n'
+            fi
+            
+            if [ -n "$FIXES_LIST" ]; then
+              RELEASE_NOTES="$RELEASE_NOTES### 🐛 Bug Fixes"$'\n\n'"$FIXES_LIST"$'\n'
+            fi
+            
+            if [ -n "$OTHER_CHANGES" ]; then
+              RELEASE_NOTES="$RELEASE_NOTES### 🔧 Other Changes"$'\n\n'"$OTHER_CHANGES"$'\n'
+            fi
+          fi
+          
+          # Add installation and upgrade instructions
+          RELEASE_NOTES="$RELEASE_NOTES## 📦 Installation & Upgrade"$'\n\n'
+          RELEASE_NOTES="$RELEASE_NOTES### New Installation"$'\n'
+          RELEASE_NOTES="$RELEASE_NOTES\`\`\`bash"$'\n'
+          RELEASE_NOTES="$RELEASE_NOTES""composer require solution-forest/tab-layout-plugin"$'\n'
+          RELEASE_NOTES="$RELEASE_NOTES\`\`\`"$'\n\n'
+          
+          if [ -n "$LATEST_TAG" ]; then
+            RELEASE_NOTES="$RELEASE_NOTES### Upgrade from ${LATEST_TAG}"$'\n'
+            RELEASE_NOTES="$RELEASE_NOTES\`\`\`bash"$'\n'
+            RELEASE_NOTES="$RELEASE_NOTES""composer update solution-forest/tab-layout-plugin"$'\n'
+            RELEASE_NOTES="$RELEASE_NOTES\`\`\`"$'\n\n'
+          fi
+          
+          # Add compatibility information
+          RELEASE_NOTES="$RELEASE_NOTES## 🔧 Compatibility"$'\n\n'
+          RELEASE_NOTES="$RELEASE_NOTES""- PHP: ^8.0"$'\n'
+          RELEASE_NOTES="$RELEASE_NOTES""- Filament: ^3.0"$'\n'
+          RELEASE_NOTES="$RELEASE_NOTES""- Laravel: ^9.0|^10.0|^11.0"$'\n\n'
+          
+          # Add links
+          RELEASE_NOTES="$RELEASE_NOTES## 🔗 Links"$'\n\n'
+          RELEASE_NOTES="$RELEASE_NOTES""- [Documentation](https://github.com/solution-forest/tab-layout-plugin#readme)"$'\n'
+          RELEASE_NOTES="$RELEASE_NOTES""- [Issues](https://github.com/solution-forest/tab-layout-plugin/issues)"$'\n'
+          RELEASE_NOTES="$RELEASE_NOTES""- [Changelog](https://github.com/solution-forest/tab-layout-plugin/blob/main/CHANGELOG.md)"$'\n'
+          
+          # Save to output
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$RELEASE_NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "v${{ github.event.inputs.version }}"
+          name: "Release ${{ github.event.inputs.version }}"
+          body: ${{ steps.generate_notes.outputs.notes }}
+          draft: false
+          prerelease: ${{ github.event.inputs.prerelease }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update CHANGELOG.md
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          
+          # Create CHANGELOG.md if it doesn't exist
+          if [ ! -f CHANGELOG.md ]; then
+            cat > CHANGELOG.md << 'EOL'
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+EOL
+          fi
+          
+          # Generate changelog entry
+          CHANGELOG_ENTRY="## [$VERSION] - $(date +%Y-%m-%d)"$'\n\n'
+          
+          # Get commits since last tag
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -z "$LATEST_TAG" ]; then
+            COMMITS=$(git log --pretty=format:"%s" --reverse)
+          else
+            COMMITS=$(git log ${LATEST_TAG}..HEAD --pretty=format:"%s" --reverse)
+          fi
+          
+          # Categorize for changelog
+          ADDED=""
+          CHANGED=""
+          FIXED=""
+          REMOVED=""
+          
+          while IFS= read -r commit; do
+            if [ -n "$commit" ]; then
+              if echo "$commit" | grep -qE "feat"; then
+                ADDED="$ADDED- ${commit#feat*: }"$'\n'
+              elif echo "$commit" | grep -qE "fix"; then
+                FIXED="$FIXED- ${commit#fix*: }"$'\n'
+              elif echo "$commit" | grep -qE "(BREAKING CHANGE|!:)"; then
+                CHANGED="$CHANGED- ${commit}"$'\n'
+              elif echo "$commit" | grep -qE "remove"; then
+                REMOVED="$REMOVED- ${commit}"$'\n'
+              fi
+            fi
+          done <<< "$COMMITS"
+          
+          # Build changelog sections
+          if [ -n "$ADDED" ]; then
+            CHANGELOG_ENTRY="$CHANGELOG_ENTRY### Added"$'\n'"$ADDED"$'\n'
+          fi
+          
+          if [ -n "$CHANGED" ]; then
+            CHANGELOG_ENTRY="$CHANGELOG_ENTRY### Changed"$'\n'"$CHANGED"$'\n'
+          fi
+          
+          if [ -n "$FIXED" ]; then
+            CHANGELOG_ENTRY="$CHANGELOG_ENTRY### Fixed"$'\n'"$FIXED"$'\n'
+          fi
+          
+          if [ -n "$REMOVED" ]; then
+            CHANGELOG_ENTRY="$CHANGELOG_ENTRY### Removed"$'\n'"$REMOVED"$'\n'
+          fi
+          
+          # Insert into CHANGELOG.md
+          # Create a temporary file with the new entry
+          {
+            head -n 6 CHANGELOG.md
+            echo "$CHANGELOG_ENTRY"
+            tail -n +7 CHANGELOG.md
+          } > CHANGELOG.tmp && mv CHANGELOG.tmp CHANGELOG.md
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: "Release v${{ github.event.inputs.version }}"
+          file_pattern: CHANGELOG.md
+          tagging_message: "v${{ github.event.inputs.version }}"
