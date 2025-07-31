@@ -41,7 +41,7 @@ php artisan vendor:publish --tag="tab-layout-plugin-views"
 
 ### Create a Simple Tab Widget
 
-You can create one Livewire component in each tab by using the `TabsWidget::make()` method:
+Create tabbed interfaces with individual Livewire components using the TabsWidget::make() method. This is the quickest way to get started with basic tab functionality.
 
 ```php
 // In App\Resources\UserResource\ListUsers.php
