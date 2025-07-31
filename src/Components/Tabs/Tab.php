@@ -5,6 +5,7 @@ namespace SolutionForest\TabLayoutPlugin\Components\Tabs;
 use Closure;
 use Illuminate\Support\Str;
 use SolutionForest\TabLayoutPlugin\Components\FilamentComponent;
+use SolutionForest\TabLayoutPlugin\Concerns\Components\BelongsToContainer;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\HasBadge;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\HasIcon;
 
@@ -12,6 +13,7 @@ class Tab extends FilamentComponent
 {
     use HasBadge;
     use HasIcon;
+    use BelongsToContainer;
 
     protected string $view = 'tab-layout-plugin::components.tabs.tab';
 

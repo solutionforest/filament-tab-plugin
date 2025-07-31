@@ -5,8 +5,9 @@ namespace SolutionForest\TabLayoutPlugin\Widgets;
 use Filament\Widgets\Widget;
 use Filament\Widgets\WidgetConfiguration;
 use SolutionForest\TabLayoutPlugin\Concerns\Layouts\InteractsWithTab;
+use SolutionForest\TabLayoutPlugin\Contracts\HasTabs;
 
-class TabsWidget extends Widget
+class TabsWidget extends Widget implements HasTabs
 {
     use InteractsWithTab;
 
