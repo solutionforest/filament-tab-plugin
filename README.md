@@ -105,7 +105,7 @@ class ListUsers extends ListRecords
 2. **Array syntax** - Simpler for basic configurations
 3. **Chain tab() method** - Useful for adding tabs conditionally
 
-### Create a Complex Tab Widget
+### Create a Advanced Tab Widget
 
 You can also create multiple Livewire components, HTML, and strings inside each tab. You can even make a tab act as a redirect link by extending the `TabsWidget` class.
 
