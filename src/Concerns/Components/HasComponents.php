@@ -6,8 +6,9 @@ use Closure;
 use Livewire\Component as LivewireComponent;
 use SolutionForest\TabLayoutPlugin\Components\FilamentComponent;
 use SolutionForest\TabLayoutPlugin\Components\Tabs\Tab as TabsLayoutTab;
-use SolutionForest\TabLayoutPlugin\Components\Tabs\TabContainer;
 use SolutionForest\TabLayoutPlugin\Components\Tabs\TabLayoutComponent;
+use SolutionForest\TabLayoutPlugin\Schemas\Components\LivewireContainer;
+use SolutionForest\TabLayoutPlugin\Schemas\Components\TabContentContainer;
 
 trait HasComponents
 {
@@ -45,7 +46,7 @@ trait HasComponents
 
             if (
                 $component instanceof FilamentComponent ||
-                $component instanceof TabContainer ||
+                $component instanceof LivewireContainer ||
                 $component instanceof TabLayoutComponent
             ) {
 
@@ -55,26 +56,28 @@ trait HasComponents
 
                 return $component;
 
-            } elseif (is_string($component)) {
+            } 
+            elseif (
+                (is_string($component) && is_subclass_of($component, LivewireComponent::class)) ||
+                (is_object($component) && is_subclass_of($component, LivewireComponent::class))
+            ) {
 
-                if (is_subclass_of($component, LivewireComponent::class)) {
-                    return TabContainer::make($component);
+                $livewireComponentFqcn = is_string($component) ? $component : get_class($component);
+                $livewireComponentParms = is_object($component) ? $component->all() : [];
+
+                return LivewireContainer::make($livewireComponentFqcn)
+                    ->data($livewireComponentParms);
+            }
+            elseif (is_string($component)) {
+                
+                return TabContentContainer::make($component);
+            }
+            elseif (is_object($component)) {
+                if ($component instanceof TabContentContainer) {
+                    return $component;
                 }
 
-                return TabContainer::make('tab-layout-plugin::component-wrapper')
-                    ->data(['rawComponent' => str($component)->toHtmlString()]);
-
-            } elseif (is_object($component)) {
-
-                // Check if the component is a Livewire component
-                if (is_subclass_of($component, LivewireComponent::class)) {
-                    return TabContainer::make(get_class($component))
-                        ->data($component->all());
-                }
-
-                return TabContainer::make('tab-layout-plugin::component-wrapper')
-                    ->data(['rawComponent' => $component]);
-
+                return TabContentContainer::make($component);
             }
 
             return null;
@@ -87,15 +90,41 @@ trait HasComponents
 
         return array_filter(
             $components,
-            function (TabContainer|TabLayoutComponent|TabsLayoutTab|LivewireComponent|null $component) {
-                if ($component && method_exists($component, 'isHidden')) {
-                    return ! $component->isHidden();
-                } elseif ($component) {
+            function ($component) {
 
-                    return true;
+                if (is_null($component)) {
+                    return false;
                 }
 
-                return false;
+                // Check type of instance
+                if (
+                    ! (
+                        $component instanceof LivewireContainer ||
+                        $component instanceof TabContentContainer ||
+                        $component instanceof TabLayoutComponent ||
+                        $component instanceof TabsLayoutTab ||
+                        $component instanceof LivewireComponent
+                    )
+                ) {
+                    $targetTypes = collect([
+                        LivewireContainer::class,
+                        TabContentContainer::class,
+                        TabLayoutComponent::class,
+                        TabsLayoutTab::class,
+                        LivewireComponent::class,
+                    ])
+                        ->map(fn ($fqcn) => class_basename($fqcn))
+                        ->join(', ');
+                    throw new \InvalidArgumentException(
+                        "Components must be instances of {$targetTypes}."
+                    );
+                }
+
+                if (method_exists($component, 'isHidden')) {
+                    return ! $component->isHidden();
+                }
+
+                return true;
             }
         );
     }

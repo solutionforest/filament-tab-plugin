@@ -1,5 +1,7 @@
 @use('Filament\Support\Enums\GridDirection')
 @use('Illuminate\View\ComponentAttributeBag')
+@use('Illuminate\View\Component', 'ViewComponent')
+@use('SolutionForest\TabLayoutPlugin\Schemas\Components\LivewireContainer')
 <div
     {{
         (new ComponentAttributeBag)
@@ -20,9 +22,6 @@
     @foreach ($getComponents(withHidden: false) as $tabContainer)
         @php
             $columns = $tabContainer->getColumnSpan() ?? [];
-
-            $tabComponent = $tabContainer->getComponent();
-            $data = $tabContainer->getData() ?? [];
         @endphp
 
         <div
@@ -47,11 +46,16 @@
                     ])
             }}
         >
-
-            @if ($tabComponent)
-                @livewire($tabComponent, $data)
+            @if ($tabContainer instanceof ViewComponent)
+                {{ $tabContainer->render() }}
+            @else
+                @php
+                    $livewireComponent = $tabContainer->getComponent();
+                @endphp
+                @if ($livewireComponent)
+                    @livewire($livewireComponent, $tabContainer->getData() ?? [])
+                @endif
             @endif
-
         </div>
     @endforeach
 </div>

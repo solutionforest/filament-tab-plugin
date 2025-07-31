@@ -4,8 +4,8 @@ namespace SolutionForest\TabLayoutPlugin\Concerns\Layouts;
 
 use SolutionForest\TabLayoutPlugin\Components\Tabs;
 use SolutionForest\TabLayoutPlugin\Components\Tabs\Tab;
-use SolutionForest\TabLayoutPlugin\Components\Tabs\TabContainer;
 use SolutionForest\TabLayoutPlugin\Contracts\HasTabs;
+use SolutionForest\TabLayoutPlugin\Schemas\Components\LivewireContainer;
 use SolutionForest\TabLayoutPlugin\Widgets\TabWidgetContentConfiguration;
 
 trait InteractsWithTab
@@ -66,13 +66,13 @@ trait InteractsWithTab
 
             if (is_array($tab) && TabWidgetContentConfiguration::isValidArray($tab)) {
                 $tabConfig = TabWidgetContentConfiguration::parseFormArray($tab);
-                $tab = Tab::make($tabConfig->tabLabel, $tabConfig->tabKey)
+                $tab = Tab::make(label: $tabConfig->tabLabel, id: $tabConfig->tabKey)
                     ->schema([
-                        TabContainer::make($tabConfig->component)
+                        LivewireContainer::make($tabConfig->component)
                             ->data($tabConfig->params),
                     ]);
             } elseif ($tab instanceof Tab) {
-                //
+                // Skip if it's already a Tab instance
             } else {
                 throw new \InvalidArgumentException('Each tab must be an instance of '.Tab::class.' or a valid array configuration.');
             }
