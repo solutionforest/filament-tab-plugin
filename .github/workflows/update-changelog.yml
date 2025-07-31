@@ -10,12 +10,11 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: 1.x
+          ref: ${{ github.ref_name }}
 
       - name: Update Changelog
         uses: stefanzweifel/changelog-updater-action@v1
