@@ -50,7 +50,9 @@ trait HasComponents
                 $component instanceof TabLayoutComponent
             ) {
 
-                if (in_array(BelongsToContainer::class, class_uses_recursive($component))) {
+                if (in_array(BelongsToContainer::class, class_uses_recursive($component)) &&
+                    method_exists($component, 'container') 
+                ) {
                     $component = $component->container($this);
                 }
 
