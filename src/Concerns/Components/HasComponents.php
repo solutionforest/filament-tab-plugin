@@ -51,15 +51,14 @@ trait HasComponents
             ) {
 
                 if (in_array(BelongsToContainer::class, class_uses_recursive($component)) &&
-                    method_exists($component, 'container') 
+                    method_exists($component, 'container')
                 ) {
                     $component = $component->container($this);
                 }
 
                 return $component;
 
-            } 
-            elseif (
+            } elseif (
                 (is_string($component) && is_subclass_of($component, LivewireComponent::class)) ||
                 (is_object($component) && is_subclass_of($component, LivewireComponent::class))
             ) {
@@ -69,12 +68,10 @@ trait HasComponents
 
                 return LivewireContainer::make($livewireComponentFqcn)
                     ->data($livewireComponentParms);
-            }
-            elseif (is_string($component)) {
-                
+            } elseif (is_string($component)) {
+
                 return TabContentContainer::make($component);
-            }
-            elseif (is_object($component)) {
+            } elseif (is_object($component)) {
                 if ($component instanceof TabContentContainer) {
                     return $component;
                 }

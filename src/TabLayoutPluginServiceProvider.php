@@ -3,7 +3,6 @@
 namespace SolutionForest\TabLayoutPlugin;
 
 use Livewire\Livewire;
-use SolutionForest\TabLayoutPlugin\Components\Tabs\ComponentWrapper;
 use SolutionForest\TabLayoutPlugin\Livewire\Components\Tabs\LivewireWrapper;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;

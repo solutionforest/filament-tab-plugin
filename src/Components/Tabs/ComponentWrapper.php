@@ -7,6 +7,4 @@ use SolutionForest\TabLayoutPlugin\Livewire\Components\Tabs\LivewireWrapper;
 /**
  * @deprecated Use `SolutionForest\TabLayoutPlugin\Livewire\Components\Tabs\LivewireWrapper` instead.
  */
-class ComponentWrapper extends LivewireWrapper
-{
-}
+class ComponentWrapper extends LivewireWrapper {}
