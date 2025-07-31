@@ -46,8 +46,8 @@ You can create one Livewire component in each tab by using the `TabsWidget::make
 ```php
 // In App\Resources\UserResource\ListUsers.php
 
+use SolutionForest\TabLayoutPlugin\Schemas\SimpleTabSchema;
 use SolutionForest\TabLayoutPlugin\Widgets\TabsWidget;
-use SolutionForest\TabLayoutPlugin\Widgets\TabWidgetContentConfiguration;
 
 class ListUsers extends ListRecords
 {
@@ -55,31 +55,20 @@ class ListUsers extends ListRecords
     {
         return [
             TabsWidget::make([
-                // Method 1: Using TabWidgetContentConfiguration object
-                new TabWidgetContentConfiguration(
-                    component: \Filament\Widgets\AccountWidget::class,
-                    params: [],
-                    tabKey: 'account_widget',
-                    tabLabel: 'Account Widget',
-                ),
-                
-                // Method 2: Using array syntax
-                [
-                    'component' => \App\Filament\Resources\UserResource\Pages\EditUser::class,
-                    'params' => ['record' => 1], // Pass parameters to the Livewire component
-                    'tabKey' => 'edit_user',
-                    'tabLabel' => 'Edit User',
-                ]
-            ])
-            // Method 3: Using the tab() method to add additional tabs
-            ->tab(
-                new TabWidgetContentConfiguration(
-                    component: \Filament\Widgets\FilamentInfoWidget::class,
-                    params: [],
-                    tabKey: 'filament_info_widget',
-                    tabLabel: 'Filament Info Widget',
-                ),
-            ),
+
+                SimpleTabSchema::make(
+                    label: 'Account Widget',
+                    id: 'account_widget',
+                )->livewireComponent(\Filament\Widgets\AccountWidget::class),
+
+                SimpleTabSchema::make(
+                    label: 'Edit User',
+                )->livewireComponent(\App\Filament\Resources\UserResource\Pages\EditUser::class, ['record' => 1]),
+
+                SimpleTabSchema::make('Link')
+                    ->url('https://example.com', true)
+                    ->icon('heroicon-o-globe-alt'),
+            ]),
         ];
     }
 }
