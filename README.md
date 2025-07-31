@@ -319,7 +319,7 @@ protected function schema(): array
         ...
         TabLayoutTab::make('Label 3')
             ->schema([
-                App\Filament\Tabs\Components\FilamentInfoWidget::make()
+                \App\Filament\Tabs\Components\FilamentInfoWidget::make()
                     // ->data([]),  // Also can assign data here
             ]),
     ];
