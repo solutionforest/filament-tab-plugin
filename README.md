@@ -158,7 +158,7 @@ echo "This is a code block";
                     app(\App\Livewire\Dummy::class, ['__id' => uniqid() . '-dummy']),
 
                     // Display Livewire component with data
-                    LivewireContainer::make(\App\Filament\Resources\UserResource\Pages\EditUser::class)
+                    LivewireContainer::make(\App\Filament\Resources\Users\Pages\EditUser::class)
                         ->data(['record' => 1]),
 
                     LivewireContainer::make(\Filament\Widgets\AccountWidget::class)
