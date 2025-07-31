@@ -3,7 +3,8 @@
 namespace {{ namespace }};
 
 use SolutionForest\TabLayoutPlugin\Components\Tabs\Tab as TabLayoutTab;
-use SolutionForest\TabLayoutPlugin\Components\Tabs\TabContainer;
+use SolutionForest\TabLayoutPlugin\Schemas\Components\LivewireContainer;
+use SolutionForest\TabLayoutPlugin\Schemas\Components\TabContentContainer;
 use SolutionForest\TabLayoutPlugin\Widgets\TabsWidget as BaseWidget;
 
 class {{ class }} extends BaseWidget
@@ -11,19 +12,19 @@ class {{ class }} extends BaseWidget
     protected function schema(): array
     {
         return [
-
             // SAMPLE CODE, CAN DELETE
             // TabLayoutTab::make('Label 1')
             //     ->icon('heroicon-o-bell')
             //     ->badge('39')
             //     ->schema([
-            //         TabContainer::make(\Filament\Widgets\AccountWidget::class),
+            //         LivewireContainer::make(\Filament\Widgets\AccountWidget::class),
             //     ]),
             // TabLayoutTab::make('Label 2')
             //     ->schema([
-            //         TabContainer::make(\Filament\Widgets\FilamentInfoWidget::class),
+            //         LivewireContainer::make(\Filament\Widgets\FilamentInfoWidget::class),
             //     ]),
-
+            // TabLayoutTab::make('Go To Filamentphp (Link)')
+            //     ->url("https://filamentphp.com/", true),
         ];
     }
 

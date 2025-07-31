@@ -1,8 +1,9 @@
 # Tab Layout Plugin
 
+![Filament Supported Versions](https://img.shields.io/badge/filament-^4.0-green.svg)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/solution-forest/tab-layout-plugin.svg?style=flat-square)](https://packagist.org/packages/solution-forest/tab-layout-plugin)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/solution-forest/tab-layout-plugin/run-tests?label=tests)](https://github.com/solution-forest/tab-layout-plugin/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/solution-forest/tab-layout-plugin/Check%20&%20fix%20styling?label=code%20style)](https://github.com/solution-forest/tab-layout-plugin/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
+[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/solutionforest/tab-layout-plugin/run-tests?label=tests)](https://github.com/solutionforest/tab-layout-plugin/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/solutionforest/tab-layout-plugin/Check%20&%20fix%20styling?label=code%20style)](https://github.com/solutionforest/tab-layout-plugin/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/solution-forest/tab-layout-plugin.svg?style=flat-square)](https://packagist.org/packages/solution-forest/tab-layout-plugin)
 
 This plugin creates widgets with tab layout for Filament Admin.
@@ -41,13 +42,39 @@ php artisan vendor:publish --tag="tab-layout-plugin-views"
 
 ### Create a Simple Tab Widget
 
-You can create one Livewire component in each tab by using the `TabsWidget::make()` method:
+Create tabbed interfaces with individual Livewire components using the `TabsWidget::make()` method. This is the quickest way to get started with basic tab functionality.
+
+#### Step 1: Register the TabsWidget
+
+First, register the `TabsWidget` in your Filament panel provider:
 
 ```php
-// In App\Resources\UserResource\ListUsers.php
+<?php
 
+namespace App\Providers\Filament;
+
+use Filament\Panel;
+use Filament\PanelProvider;
+
+class AdminPanelProvider extends PanelProvider
+{
+    public function panel(Panel $panel): Panel
+    {
+        return $panel
+            ->widgets([
+                \SolutionForest\TabLayoutPlugin\Widgets\TabsWidget::class,
+            ]);
+    }
+}
+```
+
+#### Step 2: Implement in Your Resource
+
+```php
+// In App\Filament\Resources\Users\Pages\ListUsers.php
+
+use SolutionForest\TabLayoutPlugin\Schemas\SimpleTabSchema;
 use SolutionForest\TabLayoutPlugin\Widgets\TabsWidget;
-use SolutionForest\TabLayoutPlugin\Widgets\TabWidgetContentConfiguration;
 
 class ListUsers extends ListRecords
 {
@@ -55,31 +82,19 @@ class ListUsers extends ListRecords
     {
         return [
             TabsWidget::make([
-                // Method 1: Using TabWidgetContentConfiguration object
-                new TabWidgetContentConfiguration(
-                    component: \Filament\Widgets\AccountWidget::class,
-                    params: [],
-                    tabKey: 'account_widget',
-                    tabLabel: 'Account Widget',
-                ),
-                
-                // Method 2: Using array syntax
-                [
-                    'component' => \App\Filament\Resources\UserResource\Pages\EditUser::class,
-                    'params' => ['record' => 1], // Pass parameters to the Livewire component
-                    'tabKey' => 'edit_user',
-                    'tabLabel' => 'Edit User',
-                ]
-            ])
-            // Method 3: Using the tab() method to add additional tabs
-            ->tab(
-                new TabWidgetContentConfiguration(
-                    component: \Filament\Widgets\FilamentInfoWidget::class,
-                    params: [],
-                    tabKey: 'filament_info_widget',
-                    tabLabel: 'Filament Info Widget',
-                ),
-            ),
+                SimpleTabSchema::make(
+                    label: 'Account Widget',
+                    id: 'account_widget',
+                )->livewireComponent(\Filament\Widgets\AccountWidget::class),
+
+                SimpleTabSchema::make(
+                    label: 'Edit User',
+                )->livewireComponent(\App\Filament\Resources\Users\Pages\EditUser::class, ['record' => 1]),
+
+                SimpleTabSchema::make('Link')
+                    ->url('https://example.com', true)
+                    ->icon('heroicon-o-globe-alt'),
+            ]),
         ];
     }
 }
@@ -105,7 +120,8 @@ You will then define the child components in the `schema()` method to display in
 namespace App\Filament\Widgets;
 
 use SolutionForest\TabLayoutPlugin\Components\Tabs\Tab as TabLayoutTab;
-use SolutionForest\TabLayoutPlugin\Components\Tabs\TabContainer;
+use SolutionForest\TabLayoutPlugin\Schemas\Components\LivewireContainer;
+use SolutionForest\TabLayoutPlugin\Schemas\Components\TabContentContainer;
 use SolutionForest\TabLayoutPlugin\Widgets\TabsWidget as BaseWidget;
 
 class DummyTabs extends BaseWidget
@@ -120,7 +136,7 @@ class DummyTabs extends BaseWidget
                 ->schema([
 
                     // Display Livewire component
-                    TabContainer::make(\Filament\Widgets\AccountWidget::class),
+                    LivewireContainer::make(\Filament\Widgets\AccountWidget::class),
 
                     // Display HTML
                     str('
@@ -143,13 +159,13 @@ echo "This is a code block";
                     app(\App\Livewire\Dummy::class, ['__id' => uniqid() . '-dummy']),
 
                     // Display Livewire component with data
-                    TabContainer::make(\App\Filament\Resources\UserResource\Pages\EditUser::class)
+                    LivewireContainer::make(\App\Filament\Resources\Users\Pages\EditUser::class)
                         ->data(['record' => 1]),
 
-                    TabContainer::make(\Filament\Widgets\AccountWidget::class)
+                    LivewireContainer::make(\Filament\Widgets\AccountWidget::class)
                         ->columnSpan(1),
 
-                    TabContainer::make(\Filament\Widgets\AccountWidget::class)
+                    LivewireContainer::make(\Filament\Widgets\AccountWidget::class)
                         ->columnSpan(1),
                 ])
                 ->columns(2),
@@ -184,17 +200,17 @@ protected function schema(): array
             ->icon('heroicon-o-bell')
             ->badge('39')
             ->schema([
-                TabContainer::make(\Filament\Widgets\AccountWidget::class),
+                LivewireContainer::make(\Filament\Widgets\AccountWidget::class),
                 
                 // Display Livewire component with data
-                TabContainer::make(ViewProductCategory::class)
+                LivewireContainer::make(ViewProductCategory::class)
                     // The Data of target component
                     ->data(['record' => 1]),    
             ]),
 
         TabLayoutTab::make('Label 2')
             ->schema([
-                TabContainer::make(\Filament\Widgets\FilamentInfoWidget::class),
+                LivewireContainer::make(\Filament\Widgets\FilamentInfoWidget::class),
             ]),
     ];
 }
@@ -243,7 +259,12 @@ class DummyTabs extends BaseWidget
 
 #### Persist Active Tab in URL
 
-Keep the selected tab active when users reload the page or share URLs by persisting the tab state in the query string.
+Maintain the selected tab state when users reload the page or share URLs. This feature saves the active tab in the browser's query string, providing a better user experience.
+
+**Requirements:**
+- Each tab must have a unique `id`
+- The tab group needs an `id` attribute
+- Define a Livewire property to store the active tab state
 
 ```php
 use SolutionForest\TabLayoutPlugin\Components\Tabs;
@@ -252,10 +273,10 @@ use SolutionForest\TabLayoutPlugin\Widgets\TabsWidget as BaseWidget;
 
 class DummyTabs extends BaseWidget
 {
-    // Define the property that will store the active tab
+    // Property to store the active tab state
     public $activeTab = '';
 
-    // Enable Livewire query string binding
+    // Enable Livewire query string binding for URL persistence
     public function queryString()
     {
         return ['activeTab'];
@@ -265,11 +286,11 @@ class DummyTabs extends BaseWidget
     {
         return $tabs
             ->id('dummy-tabs') // Required: unique ID for the tab group
-            // Dynamic: Use a callback to get the query parameter name
+            // Option 1: Use a callback to determine the query parameter name
             ->persistTabInQueryString(function ($component, $livewire) {
                 return 'activeTab'; // Property name to sync with URL
             })
-            // Static: Direct property name for URL persistence
+            // Option 2: Direct property name for URL persistence
             ->persistTabInQueryString('activeTab');
     }
     
@@ -293,7 +314,7 @@ class DummyTabs extends BaseWidget
 
 #### Create Your Own Tab Container
 
-In addition to using the `TabContainer` component, you can create your own custom tab layout components by extending the `TabLayoutComponent` class or using the `php artisan tab-layout:component` command.
+In addition to using the `LivewireContainer` component, you can create your own custom tab layout components by extending the `TabLayoutComponent` class or using the `php artisan tab-layout:component` command.
 
 For example, the following PHP code defines a FilamentInfoWidget class that extends TabLayoutComponent and specifies a `ComponentTabComponent` as the tab component to use. The **getData** method can be used to populate the component with data.
 ```php
@@ -329,7 +350,7 @@ protected function schema(): array
         ...
         TabLayoutTab::make('Label 3')
             ->schema([
-                App\Filament\Tabs\Components\FilamentInfoWidget::make()
+                \App\Filament\Tabs\Components\FilamentInfoWidget::make()
                     // ->data([]),  // Also can assign data here
             ]),
     ];
