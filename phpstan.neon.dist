@@ -4,10 +4,8 @@ includes:
 parameters:
     level: 4
     paths:
-        - config
-        - resources
         - src
+        - config
     tmpDir: build/phpstan
     checkOctaneCompatibility: true
     checkModelProperties: true
-    checkMissingIterableValueType: false
