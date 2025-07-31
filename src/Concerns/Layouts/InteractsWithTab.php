@@ -69,10 +69,9 @@ trait InteractsWithTab
         foreach ($tabs as $tab) {
 
             if (is_array($tab)) {
-                if (!SimpleTabSchema::isValidArray($tab) && TabWidgetContentConfiguration::isValidArray($tab)) {
+                if (! SimpleTabSchema::isValidArray($tab) && TabWidgetContentConfiguration::isValidArray($tab)) {
                     $tab = TabWidgetContentConfiguration::parseFormArray($tab);
-                } 
-                else {
+                } else {
                     $tab = SimpleTabSchema::parseFormArray($tab);
                 }
             }
@@ -90,7 +89,7 @@ trait InteractsWithTab
                         // Livewire
                         if ($tab->content) {
                             $tmpTab->schema([
-                                LivewireContainer::make($tab->content)->data($tab->contentParams ?? [])
+                                LivewireContainer::make($tab->content)->data($tab->contentParams ?? []),
                             ]);
                         }
                 }
@@ -106,7 +105,7 @@ trait InteractsWithTab
                 $tab = $tmpTab;
 
             } elseif ($tab instanceof Tab) {
-                
+
                 // If the tab is already a Tab instance, we can use it directly
 
             } else {

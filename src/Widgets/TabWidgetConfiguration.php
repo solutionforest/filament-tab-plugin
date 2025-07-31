@@ -6,7 +6,6 @@ use Filament\Widgets\Widget;
 use Filament\Widgets\WidgetConfiguration;
 use InvalidArgumentException;
 use SolutionForest\TabLayoutPlugin\Schemas\SimpleTabSchema;
-use SolutionForest\TabLayoutPlugin\Widgets\TabWidgetContentConfiguration;
 
 class TabWidgetConfiguration extends WidgetConfiguration
 {
@@ -23,8 +22,8 @@ class TabWidgetConfiguration extends WidgetConfiguration
         $computedTabs = [];
 
         foreach (array_merge(
-            $tabs, 
-            $properties['tabs'] ?? [], 
+            $tabs,
+            $properties['tabs'] ?? [],
             $properties['tabComponents'] ?? [],
         ) as $item) {
             if (is_array($item)) {
@@ -80,8 +79,8 @@ class TabWidgetConfiguration extends WidgetConfiguration
                 'label' => ['tabLabel'],
                 'content' => ['component'],
                 'contentParams' => ['params'],
-            ]  as $newParamKey => $oldParamKeys) {
-                
+            ] as $newParamKey => $oldParamKeys) {
+
                 foreach ($oldParamKeys as $oldParamKey) {
                     if (isset($item[$oldParamKey])) {
                         $item[$newParamKey] = $item[$oldParamKey];

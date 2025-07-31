@@ -33,7 +33,7 @@ class SimpleTabSchema
         public string $label,
         /** The ID of the tab */
         public ?string $id = null,
-    ) { }
+    ) {}
 
     public static function make(string $label, ?string $id = null): static
     {
@@ -41,8 +41,7 @@ class SimpleTabSchema
     }
 
     /**
-     * @param string $component
-     * @param array $data
+     * @param  string  $component
      */
     public function livewireComponent($component, array $data = []): static
     {
@@ -54,7 +53,7 @@ class SimpleTabSchema
     }
 
     /**
-     * @param string $url
+     * @param  string  $url
      */
     public function url($url, bool $shouldOpenInNewTab = false): static
     {
@@ -68,7 +67,7 @@ class SimpleTabSchema
     }
 
     /**
-     * @param string $icon
+     * @param  string  $icon
      */
     public function icon($icon): static
     {
@@ -78,7 +77,7 @@ class SimpleTabSchema
     }
 
     /**
-     * @param string $badge
+     * @param  string  $badge
      */
     public function badge($badge): static
     {
@@ -88,7 +87,6 @@ class SimpleTabSchema
     }
 
     /**
-     * @param array $data
      * @return static
      */
     public static function parseFormArray(array $data)
@@ -148,7 +146,7 @@ class SimpleTabSchema
     public static function isValidArray(array $data): bool
     {
         try {
-            
+
             // Check the array is parse from a valid SimpleTabSchema
 
             // $fqcn = static::class;
@@ -157,10 +155,10 @@ class SimpleTabSchema
             $instance = $fqcn::parseFormArray($data);
 
             $dataToCheck = $instance->toArray();
-            
+
             foreach ($dataToCheck as $key => $value) {
                 if (in_array($key, ['__fqcn', 'contentType'])) {
-                    continue; // Skip 
+                    continue; // Skip
                 }
                 if (! array_key_exists($key, $data) || $data[$key] !== $value) {
                     return false;
