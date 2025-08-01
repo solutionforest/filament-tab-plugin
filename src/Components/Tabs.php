@@ -9,8 +9,8 @@ use SolutionForest\TabLayoutPlugin\Contracts\HasTabs;
 
 class Tabs extends FilamentComponent
 {
-    use HasExtraAlpineAttributes;
     use CanBeContained;
+    use HasExtraAlpineAttributes;
 
     protected string $view = 'tab-layout-plugin::components.tabs';
 
