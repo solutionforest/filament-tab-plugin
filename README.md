@@ -10,7 +10,8 @@ This plugin provides a flexible tab layout system for Filament Admin panels, ena
 
 Create simple tabs with individual Livewire components or build complex multi-content tabs containing HTML, strings, and multiple components. Features include customizable icons and badges, external link tabs, URL persistence, and full integration with Filament's widget system.
 
-![filament-tab-1](https://github.com/solutionforest/filament-tab-plugin/assets/68525320/0dd61497-1c22-474c-b74a-75700df51292)
+![Tab Layout Plugin](https://github.com/user-attachments/assets/eb460622-3152-488f-8a3e-d93bd7cfadad)
+
 
 Demo site : [https://filament-cms-website-demo.solutionforest.net/admin](https://filament-cms-website-demo.solutionforest.net/admin)
 
