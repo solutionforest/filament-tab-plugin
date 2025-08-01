@@ -5,6 +5,8 @@
     $livewireId = $this->getId();
     $currentTabId = $getId();
     $generatedLivewireKey = "{$livewireId}." . Tabs::class . ".container";
+
+    $isContained = $isContained();
 @endphp
 <div
     x-load
@@ -26,8 +28,8 @@
             ->merge($getExtraAttributes(), escape: false)
             ->merge($getExtraAlpineAttributes(), escape: false)
             ->class([
-                'filament-tabs-component fi-sc-tabs fi-contained',
-                'shadow-sm',
+                'filament-tabs-component fi-sc-tabs',
+                'fi-contained shadow-sm' => $isContained,
             ]) 
     }}
     {{ $getExtraAlpineAttributeBag() }}
@@ -45,7 +47,7 @@
     />
 
     <x-filament::tabs
-        :contained="true"
+        :contained="$isContained"
         :label="$getLabel()"
         :vertical="false"
         x-cloak
