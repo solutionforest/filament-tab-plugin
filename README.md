@@ -6,7 +6,9 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/solutionforest/tab-layout-plugin/Check%20&%20fix%20styling?label=code%20style)](https://github.com/solutionforest/tab-layout-plugin/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/solution-forest/tab-layout-plugin.svg?style=flat-square)](https://packagist.org/packages/solution-forest/tab-layout-plugin)
 
-This plugin creates widgets with tab layout for Filament Admin.
+This plugin provides a flexible tab layout system for Filament Admin panels, enabling you to organize content into clean, navigable tabbed interfaces. 
+
+Create simple tabs with individual Livewire components or build complex multi-content tabs containing HTML, strings, and multiple components. Features include customizable icons and badges, external link tabs, URL persistence, and full integration with Filament's widget system.
 
 ![filament-tab-1](https://github.com/solutionforest/filament-tab-plugin/assets/68525320/0dd61497-1c22-474c-b74a-75700df51292)
 

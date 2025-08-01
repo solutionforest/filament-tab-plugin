@@ -1,6 +1,6 @@
 {
     "name": "solution-forest/tab-layout-plugin",
-    "description": "This is a layout plugin for Filament Admin",
+    "description": "This plugin provides a flexible tab layout system for Filament Admin panels, enabling you to organize content into clean, navigable tabbed interfaces. ",
     "keywords": [
         "Solution Forest",
         "laravel",
