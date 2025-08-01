@@ -18,13 +18,12 @@ Demo username : demo@solutionforest.net
 
 Demo password : 12345678 Auto Reset every hour.
 
-
 ## Supported Filament versions
 | Filament Version | Plugin Version |
 |------------------|----------------|
-| v2               | <=1.x.x |
+| v2               | <=1.x.x        |
 | v3               | 2.x.x          |
-| v4               | 3.x.x-beta    |
+| v4               | 3.x.x          |
 
 ## Installation
 
