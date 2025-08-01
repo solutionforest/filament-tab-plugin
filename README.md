@@ -284,6 +284,23 @@ class DummyTabs extends BaseWidget
 
 > **Note:** When using URL persistence, each tab must have a unique `id` and the tab group needs an `id` attribute.
 
+#### Removing the Styled Container
+
+By default, tabs and their content are wrapped in a styled card container. You can remove this container styling using the `contained()` method:
+
+```php
+use SolutionForest\TabLayoutPlugin\Components\Tabs;
+
+class DummyTabs extends BaseWidget
+{
+    public static function tabs(Tabs $tabs): Tabs
+    {
+        return $tabs
+            ->contained(false);
+    }
+}
+```
+
 #### Create Your Own Tab Container
 
 In addition to using the `LivewireContainer` component, you can create your own custom tab layout components by extending the `TabLayoutComponent` class or using the `php artisan tab-layout:component` command.
