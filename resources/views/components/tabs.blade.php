@@ -4,6 +4,9 @@
     $livewireId = $this->getId();
     $currentTabId = $getId();
     $generatedLivewireKey = "{$livewireId}." . Tabs::class . ".container";
+
+    $isContained = $isContained();
+    ray($isContained)->label('Tabs is contained?');
 @endphp
 <div
     x-data="{
@@ -37,8 +40,8 @@
         $attributes
             ->merge($getExtraAttributes())
             ->class([
-                'filament-tabs-component rounded-xl shadow-sm border border-gray-300 bg-white',
-                'dark:bg-gray-800 dark:border-gray-700',
+                'filament-tabs-component',
+                'rounded-xl shadow-sm border border-gray-300 bg-white dark:bg-gray-800 dark:border-gray-700' => $isContained,
             ]) 
             ->merge([
                 "id=\"{$currentTabId}\"" => filled($currentTabId),
@@ -59,65 +62,45 @@
         x-ref="tabsData"
     />
 
-    <div
-        {!! $getLabel() ? 'aria-label="' . $getLabel() . '"' : null !!}
+    <x-filament::tabs
+        :contained="$isContained"
+        :label="$getLabel()"
+        x-cloak
         role="tablist"
-        @class([
-            'filament-tabs-component-header rounded-t-xl flex overflow-y-auto bg-gray-100',
-            'dark:bg-gray-700',
-        ])
     >
         @foreach ($getChildComponentContainer()->getComponents() as $tab)
             @php
                 $tabUrl = $tab->getUrl();
+                $tabKey = $tab->getId();
+                $tabBadge = $tab->getBadge();
+                $tabBadgeColor = 'primary';
+                $tabBadgeIconPosition = "right";
+                $tabBadgeIcon = null;
+                $tabBadgeTooltip = null;
+                $tabIconPosition = 'before';
+                $tabIcon = $tab->getIcon();
+                $onClickEvent = filled($tabUrl)
+                    ? ($tab->shouldOpenUrlInNewTab()
+                        ? "window.open('{$tabUrl}', '_blank')"
+                        : "window.location.href='{$tabUrl}'")
+                    : "tab = '{$tabKey}'";
             @endphp
-
-            <button
-                type="button"
-                aria-controls="{{ $tab->getId() }}"
-                x-bind:aria-selected="tab === '{{ $tab->getId() }}'"
-                @if (filled($tabUrl))
-                    onclick="@if ($tab->shouldOpenUrlInNewTab()) window.open('{{ $tabUrl }}', '_blank') @else window.location.href='{{ $tabUrl }}' @endif"
-                @else
-                    x-on:click="tab = '{{ $tab->getId() }}'"
-                @endif
-                role="tab"
-                x-bind:tabindex="tab === '{{ $tab->getId() }}' ? 0 : -1"
-                class="filament-tabs-component-button flex items-center gap-2 shrink-0 p-3 text-sm font-medium"
-                x-bind:class="{
-                    'text-gray-500 dark:text-gray-400': tab !== '{{ $tab->getId() }}',
-                    'filament-tabs-component-button-active bg-white text-primary-600 dark:bg-gray-800': tab === '{{ $tab->getId() }}',
-                }"
+            
+            <x-filament::tabs.item
+                :alpine-active="'tab === \'' . $tabKey . '\''"
+                :badge="$tabBadge"
+                :badge-color="$tabBadgeColor"
+                :badge-icon="$tabBadgeIcon"
+                :badge-icon-position="$tabBadgeIconPosition"
+                :badge-tooltip="$tabBadgeTooltip"
+                :icon="$tabIcon"
+                :icon-position="$tabIconPosition"
+                :x-on:click="$onClickEvent"
             >
-                @if ($icon = $tab->getIcon())
-                    <x-dynamic-component
-                        :component="$icon"
-                        class="h-5 w-5"
-                    />
-                @endif
-
-                <span>{{ $tab->getLabel() }}</span>
-
-                @if ($badge = $tab->getBadge())
-                    <span
-                        class="flex items-center justify-center gap-x-1 rounded-md text-xs font-medium ring-1 ring-inset px-1.5 min-w-[theme(spacing.5)] py-0.5 tracking-tight"
-                        x-bind:class="{
-                            'bg-gray-200 dark:bg-gray-600': tab !== '{{ $tab->getId() }}',
-                            'fi-color-custom bg-custom-50 text-custom-600 ring-custom-600/10 dark:bg-custom-400/10 dark:text-custom-400 dark:ring-custom-400/30 fi-color-primary font-medium': tab === '{{ $tab->getId() }}',
-                        }"
-                        @style([
-                            \Filament\Support\get_color_css_variables(
-                                'primary',
-                                shades: [50, 400, 600],
-                            )
-                        ])
-                    >
-                        {{ $badge }}
-                    </span>
-                @endif
-            </button>
+                {{ $tab->getLabel() }}
+            </x-filament::tabs.item>
         @endforeach
-    </div>
+    </x-filament::tabs>
 
     @foreach ($getChildComponentContainer()->getComponents() as $tab)
         {{ $tab }}
