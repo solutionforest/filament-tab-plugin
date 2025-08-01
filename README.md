@@ -12,7 +12,7 @@ Create simple tabs with individual Livewire components or build complex multi-co
 
 ![filament-tab-1](https://github.com/solutionforest/filament-tab-plugin/assets/68525320/0dd61497-1c22-474c-b74a-75700df51292)
 
-Demo site : https://filament-cms-website-demo.solutionforest.net/admin
+Demo site : [https://filament-cms-website-demo.solutionforest.net/admin](https://filament-cms-website-demo.solutionforest.net/admin)
 
 Demo username : demo@solutionforest.net
 
