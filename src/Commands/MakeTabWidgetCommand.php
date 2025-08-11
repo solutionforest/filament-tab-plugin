@@ -160,7 +160,7 @@ class MakeTabWidgetCommand extends Command
 
         $this->copyStubToApp('TabsWidget', $path, [
             'class' => $widgetClass,
-            'namespace' => filled($resource) ? "{$resourceNamespace}\\{$resource}\\Widgets" . ($widgetNamespace !== '' ? "\\{$widgetNamespace}" : '') : $namespace . ($widgetNamespace !== '' ? "\\{$widgetNamespace}" : ''),
+            'namespace' => filled($resource) ? "{$resourceNamespace}\\{$resource}\\Widgets".($widgetNamespace !== '' ? "\\{$widgetNamespace}" : '') : $namespace.($widgetNamespace !== '' ? "\\{$widgetNamespace}" : ''),
         ]);
 
         $this->components->info("Filament tab widget [{$path}] created successfully.");
