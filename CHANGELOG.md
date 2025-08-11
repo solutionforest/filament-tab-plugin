@@ -1,5 +1,20 @@
 # Changelog
 
+## Release 2.2.1 - 2025-08-11
+
+### What's Changed in 2.2.1
+
+#### 🐛 Bug Fixes
+
+- fix: Update MakeTabWidgetCommand to ensure the widget can create inside the filament panel/ resource
+- fix: Unable to find `TabsWidget` widget
+
+### Installation
+
+```bash
+composer require solution-forest/tab-layout-plugin:^2.2.1
+
+```
 ## 2.2.0 - 2025-08-01
 
 ### ✨ New Feature
