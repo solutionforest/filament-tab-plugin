@@ -2,6 +2,20 @@
 
 All notable changes to `tab-layout-plugin` will be documented in this file.
 
+## 3.2.2 - 2025-08-13
+
+### What's Changed in 3.2.2
+
+#### 🔧 Other Changes
+
+* chore: change minimum stability from beta to stable in composer.json
+
+### Installation
+
+```bash
+composer require solution-forest/tab-layout-plugin:^3.2.2
+
+```
 ## 3.2.1 - 2025-08-11
 
 ### What's Changed in 3.2.1
@@ -15,6 +29,7 @@ All notable changes to `tab-layout-plugin` will be documented in this file.
 
 ```bash
 composer require solution-forest/tab-layout-plugin:^3.2.1
+
 
 ```
 ## 3.2.0 - 2025-08-01
