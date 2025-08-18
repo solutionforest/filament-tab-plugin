@@ -6,7 +6,6 @@
     $generatedLivewireKey = "{$livewireId}." . Tabs::class . ".container";
 
     $isContained = $isContained();
-    ray($isContained)->label('Tabs is contained?');
 @endphp
 <div
     x-data="{
