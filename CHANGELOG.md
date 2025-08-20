@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.2 - 2025-08-20
+
+**Full Changelog**: https://github.com/solutionforest/filament-tab-plugin/compare/2.2.1...2.2.2
+
 ## Release 2.2.1 - 2025-08-11
 
 ### What's Changed in 2.2.1
@@ -13,6 +17,7 @@
 
 ```bash
 composer require solution-forest/tab-layout-plugin:^2.2.1
+
 
 ```
 ## 2.2.0 - 2025-08-01
