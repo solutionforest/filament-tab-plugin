@@ -1,6 +1,5 @@
 # Tab Layout Plugin
 
-![Filament Supported Versions](https://img.shields.io/badge/filament-^4.0-green.svg)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/solution-forest/tab-layout-plugin.svg?style=flat-square)](https://packagist.org/packages/solution-forest/tab-layout-plugin)
 [![Total Downloads](https://img.shields.io/packagist/dt/solution-forest/tab-layout-plugin.svg?style=flat-square)](https://packagist.org/packages/solution-forest/tab-layout-plugin)
 
