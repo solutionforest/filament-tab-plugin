@@ -10,7 +10,7 @@ Create simple tabs with individual Livewire components or build complex multi-co
 
 ![Tab Layout Plugin](https://github.com/user-attachments/assets/eb460622-3152-488f-8a3e-d93bd7cfadad)
 
-Demo site : [https://filament-cms-website-demo.solutionforest.net/admin](https://filament-cms-website-demo.solutionforest.net/admin)
+Demo site : https://filament-cms-website-demo.solutionforest.net/admin
 
 Demo username : demo@solutionforest.net
 
