@@ -1,7 +1,7 @@
 # Tab Layout Plugin
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/solution-forest/tab-layout-plugin.svg?style=flat-square)](https://packagist.org/packages/solution-forest/tab-layout-plugin)
-[![Total Downloads](https://img.shields.io/packagist/dt/solution-forest/tab-layout-plugin.svg?style=flat-square)](https://packagist.org/packages/solution-forest/tab-layout-plugin)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/solution-forest/tab-layout-plugin.svg)](https://packagist.org/packages/solution-forest/tab-layout-plugin)
+[![Total Downloads](https://img.shields.io/packagist/dt/solution-forest/tab-layout-plugin.svg)](https://packagist.org/packages/solution-forest/tab-layout-plugin)
 
 This plugin provides a flexible tab layout system for Filament Admin panels, enabling you to organize content into clean, navigable tabbed interfaces. 
 
