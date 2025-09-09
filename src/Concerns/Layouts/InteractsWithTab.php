@@ -22,10 +22,20 @@ trait InteractsWithTab
 
     public function mountInteractsWithTab(): void
     {
+        $this->generateTabs();
+    }
+
+    private function generateTabs(): void
+    {
         $this->tabs = static::tabs($this->getTabs());
         if ($this instanceof HasTabs) {
             $this->tabs->livewire($this);
         }
+    }
+
+    public function rendering(): void
+    {
+        $this->generateTabs();
     }
 
     public static function tabs(Tabs $tabs): Tabs
@@ -70,7 +80,7 @@ trait InteractsWithTab
 
             if (is_array($tab)) {
                 if (! SimpleTabSchema::isValidArray($tab) && TabWidgetContentConfiguration::isValidArray($tab)) {
-                    $tab = TabWidgetContentConfiguration::parseFormArray($tab);
+                    $ab = TabWidgetContentConfiguration::parseFormArray($tab);
                 } else {
                     $tab = SimpleTabSchema::parseFormArray($tab);
                 }
@@ -110,7 +120,7 @@ trait InteractsWithTab
 
             } else {
                 throw new \InvalidArgumentException('Each tab must be an instance of '.Tab::class.' or a valid array configuration.');
-            }
+            }    
 
             $convertedTabs[] = $tab;
         }
