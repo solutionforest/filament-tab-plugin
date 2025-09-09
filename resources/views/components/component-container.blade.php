@@ -53,7 +53,7 @@
                     $livewireComponent = $tabContainer->getComponent();
                 @endphp
                 @if ($livewireComponent)
-                    @livewire($livewireComponent, $tabContainer->getData() ?? [])
+                    @livewire($livewireComponent, $tabContainer->getData() ?? [], key($livewireComponent))
                 @endif
             @endif
         </div>
