@@ -80,7 +80,7 @@ trait InteractsWithTab
 
             if (is_array($tab)) {
                 if (! SimpleTabSchema::isValidArray($tab) && TabWidgetContentConfiguration::isValidArray($tab)) {
-                    $ab = TabWidgetContentConfiguration::parseFormArray($tab);
+                    $tab = TabWidgetContentConfiguration::parseFormArray($tab);
                 } else {
                     $tab = SimpleTabSchema::parseFormArray($tab);
                 }
@@ -120,7 +120,7 @@ trait InteractsWithTab
 
             } else {
                 throw new \InvalidArgumentException('Each tab must be an instance of '.Tab::class.' or a valid array configuration.');
-            }    
+            }
 
             $convertedTabs[] = $tab;
         }
