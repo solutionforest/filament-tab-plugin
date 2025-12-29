@@ -2,6 +2,24 @@
 
 All notable changes to `tab-layout-plugin` will be documented in this file.
 
+## 3.2.4 - 2025-12-29
+
+### What's Changed in 3.2.4
+
+#### 🚀 New features
+
+- Merge pull request #13 from webard-playground/feature/backed-enum-icons (3c2cf2a)
+
+#### 🔧 Other Changes
+
+- Bump stefanzweifel/git-auto-commit-action from 6 to 7 (1152e65)
+- Bump actions/checkout from 5 to 6 (af05a8c)
+- allow BackedEnum in HasIcon trait (3c565fb)
+
+### Installation
+
+**Full Changelog**: https://github.com/solutionforest/filament-tab-plugin/compare/3.2.3...3.2.4
+
 ## 3.2.3 - 2025-09-23
 
 <!-- Release notes generated using configuration in .github/release.yml at 3.x -->
@@ -34,6 +52,7 @@ All notable changes to `tab-layout-plugin` will be documented in this file.
 composer require solution-forest/tab-layout-plugin:^3.2.2
 
 
+
 ```
 ## 3.2.1 - 2025-08-11
 
@@ -48,6 +67,7 @@ composer require solution-forest/tab-layout-plugin:^3.2.2
 
 ```bash
 composer require solution-forest/tab-layout-plugin:^3.2.1
+
 
 
 
