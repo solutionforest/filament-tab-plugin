@@ -34,6 +34,7 @@ Demo password : 12345678 Auto Reset every hour.
 | v2               | 1.x.x          |
 | v3               | 2.x.x          |
 | v4               | 3.x.x          |
+| v5               | 3.x.x          |
 
 ## Installation
 
