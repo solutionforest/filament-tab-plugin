@@ -39,10 +39,9 @@ class TabLayoutPluginServiceProvider extends PackageServiceProvider
         Livewire::component(static::$name.'::component-wrapper', LivewireWrapper::class);
 
         foreach ([
-            TabsWidget::class,
-            TabWidget::class,
-        ] as $widgetFqcn) {
-            $componentName = app(ComponentRegistry::class)->getName($widgetFqcn);
+            static::$name.'::tabs-widget' => TabsWidget::class,
+            static::$name.'::tab-widget' => TabWidget::class,
+        ] as $componentName => $widgetFqcn) {
             Livewire::component($componentName, $widgetFqcn);
         }
     }
