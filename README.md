@@ -2,7 +2,7 @@
 
 ## About Solution Forest
 
-[Solution Forest](https://solutionforest.com) Web development agency based in Hong Kong. We help customers to solve their problems. We Love Open Soruces. 
+[Solution Forest](https://solutionforest.com) Web development agency based in Hong Kong. We help customers to solve their problems. We Love Open Soruces.
 
 We have built a collection of best-in-class products:
 
@@ -10,13 +10,12 @@ We have built a collection of best-in-class products:
 - [Filaletter](https://filaletter.solutionforest.net): Filaletter - Filament Newsletter Plugin
 - [Website CMS Management](https://filamentphp.com/plugins/solution-forest-cms-website): A hands-on Filament CMS plugin for those who prefer more manual control over their website content management.
 
-
 # Tab Layout Plugin
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/solution-forest/tab-layout-plugin.svg)](https://packagist.org/packages/solution-forest/tab-layout-plugin)
 [![Total Downloads](https://img.shields.io/packagist/dt/solution-forest/tab-layout-plugin.svg)](https://packagist.org/packages/solution-forest/tab-layout-plugin)
 
-This plugin provides a flexible tab layout system for Filament Admin panels, enabling you to organize content into clean, navigable tabbed interfaces. 
+This plugin provides a flexible tab layout system for Filament Admin panels, enabling you to organize content into clean, navigable tabbed interfaces.
 
 Create simple tabs with individual Livewire components or build complex multi-content tabs containing HTML, strings, and multiple components. Features include customizable icons and badges, external link tabs, URL persistence, and full integration with Filament's widget system.
 
@@ -29,12 +28,13 @@ Demo username : demo@solutionforest.net
 Demo password : 12345678 Auto Reset every hour.
 
 ## Supported Filament versions
+
 | Filament Version | Plugin Version |
-|------------------|----------------|
+| ---------------- | -------------- |
 | v2               | 1.x.x          |
 | v3               | 2.x.x          |
 | v4               | 3.x.x          |
-| v5               | 3.x.x          |
+| v5               | 4.x.x          |
 
 ## Installation
 
@@ -113,6 +113,7 @@ class ListUsers extends ListRecords
 ```
 
 **This approach provides three ways to configure tabs:**
+
 1. **TabWidgetContentConfiguration object** - Most explicit and type-safe
 2. **Array syntax** - Simpler for basic configurations
 3. **Chain tab() method** - Useful for adding tabs conditionally
@@ -122,12 +123,14 @@ class ListUsers extends ListRecords
 You can also create multiple Livewire components, HTML, and strings inside each tab. You can even make a tab act as a redirect link by extending the `TabsWidget` class.
 
 **To generate a Tab widget:**
+
 ```bash
 php artisan make:filament-tab-widget DummyTabs
 ```
 
 You will then define the child components in the `schema()` method to display inside:
-```php
+
+````php
 
 namespace App\Filament\Widgets;
 
@@ -143,7 +146,7 @@ class DummyTabs extends BaseWidget
         return [
 
             TabLayoutTab::make('Label 1')
-                ->icon('heroicon-o-bell') 
+                ->icon('heroicon-o-bell')
                 ->badge('39')
                 ->schema([
 
@@ -163,7 +166,7 @@ echo "This is a code block";
 
             TabLayoutTab::make('Label 2')
                 ->schema([
-                    
+
                     // Display raw string
                     'Raw string here',
 
@@ -181,21 +184,22 @@ echo "This is a code block";
                         ->columnSpan(1),
                 ])
                 ->columns(2),
-                
+
             // External link
             TabLayoutTab::make('Go To FilamentPHP (Link)')
                 ->url("https://filamentphp.com/", true),
         ];
     }
 }
-```
+````
 
 #### Customize the Icon and Badge
 
 Tabs may have an icon and badge, which you can set using the `icon()` and `badge()` methods:
+
 ```php
 TabLayoutTab::make('Label 1')
-    ->icon('heroicon-o-bell') 
+    ->icon('heroicon-o-bell')
     ->badge('39')
     ->schema([
         // ...
@@ -203,7 +207,9 @@ TabLayoutTab::make('Label 1')
 ```
 
 #### Assign Parameters to Components
+
 Additionally, you have the option to pass an array of data to your component.
+
 ```php
 protected function schema(): array
 {
@@ -213,11 +219,11 @@ protected function schema(): array
             ->badge('39')
             ->schema([
                 LivewireContainer::make(\Filament\Widgets\AccountWidget::class),
-                
+
                 // Display Livewire component with data
                 LivewireContainer::make(ViewProductCategory::class)
                     // The Data of target component
-                    ->data(['record' => 1]),    
+                    ->data(['record' => 1]),
             ]),
 
         TabLayoutTab::make('Label 2')
@@ -227,11 +233,12 @@ protected function schema(): array
     ];
 }
 ```
+
 ![tab-example-1](https://github.com/solutionforest/filament-tab-plugin/assets/68525320/1061acbb-cfdf-422f-8c2f-1c0f709ecf7f)
 ![tab-example-2](https://github.com/solutionforest/filament-tab-plugin/assets/68525320/23898112-9d25-4260-bed1-081e679b8b68)
 
-
 Then, add the tab widget to your page, e.g.:
+
 ```php
 // In App\Resources\UserResource\ListUsers.php
 
@@ -259,7 +266,7 @@ class DummyTabs extends BaseWidget
     public static function tabs(Tabs $tabs): Tabs
     {
         return $tabs
-            // Dynamic: Use a callback to determine the active tab 
+            // Dynamic: Use a callback to determine the active tab
             ->activeTab(function (self $livewire, Tabs $component): int {
                 return 2; // Second tab will be active
             })
@@ -274,6 +281,7 @@ class DummyTabs extends BaseWidget
 Maintain the selected tab state when users reload the page or share URLs. This feature saves the active tab in the browser's query string, providing a better user experience.
 
 **Requirements:**
+
 - Each tab must have a unique `id`
 - The tab group needs an `id` attribute
 - Define a Livewire property to store the active tab state
@@ -305,7 +313,7 @@ class DummyTabs extends BaseWidget
             // Option 2: Direct property name for URL persistence
             ->persistTabInQueryString('activeTab');
     }
-    
+
     protected function schema(): array
     {
         return [
@@ -346,6 +354,7 @@ class DummyTabs extends BaseWidget
 In addition to using the `LivewireContainer` component, you can create your own custom tab layout components by extending the `TabLayoutComponent` class or using the `php artisan tab-layout:component` command.
 
 For example, the following PHP code defines a FilamentInfoWidget class that extends TabLayoutComponent and specifies a `ComponentTabComponent` as the tab component to use. The **getData** method can be used to populate the component with data.
+
 ```php
 <?php
 
@@ -366,12 +375,15 @@ class FilamentInfoWidget extends TabLayoutComponent
     }
 }
 ```
+
 You can also use the `php artisan tab-layout:component` command to generate the code for a new tab layout component. For example, to generate a `FilamentInfoWidget` component, you can run the following command:
+
 ```bash
 php artisan tab-layout:component FilamentInfoWidget Filament\Widgets\FilamentInfoWidget
 ```
 
 After creating your custom tab layout component by extending the `TabLayoutComponent` class, you can register it on the schema of a `TabLayoutTab` instance.
+
 ```php
 protected function schema(): array
 {
@@ -386,17 +398,13 @@ protected function schema(): array
 }
 ```
 
-
-
 ## Changelog
 
 Please see [CHANGELOG](./CHANGELOG.md) for more information on what has changed recently.
 
-
 ## Security Vulnerabilities
 
 If you discover any security related issues, please email info+package@solutionforest.net instead of using the issue tracker.
-
 
 ## License
 
