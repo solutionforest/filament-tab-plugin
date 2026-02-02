@@ -3,7 +3,6 @@
 namespace SolutionForest\TabLayoutPlugin;
 
 use Livewire\Livewire;
-use Livewire\Mechanisms\ComponentRegistry;
 use SolutionForest\TabLayoutPlugin\Commands\MakeTabComponent;
 use SolutionForest\TabLayoutPlugin\Commands\MakeTabWidgetCommand;
 use SolutionForest\TabLayoutPlugin\Livewire\Components\Tabs\LivewireWrapper;
