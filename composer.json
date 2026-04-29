@@ -6,10 +6,10 @@
         "laravel",
         "tab-layout-plugin"
     ],
-    "homepage": "https://github.com/solution-forest/tab-layout-plugin",
+    "homepage": "https://github.com/solutionforest/tab-layout-plugin",
     "support": {
-        "issues": "https://github.com/solution-forest/tab-layout-plugin/issues",
-        "source": "https://github.com/solution-forest/tab-layout-plugin"
+        "issues": "https://github.com/solutionforest/tab-layout-plugin/issues",
+        "source": "https://github.com/solutionforest/tab-layout-plugin"
     },
     "license": "MIT",
     "authors": [{
