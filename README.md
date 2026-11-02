@@ -29,12 +29,14 @@ Demo password : 12345678 Auto Reset every hour.
 
 ## Supported Filament versions
 
-| Filament Version | Plugin Version |
-| ---------------- | -------------- |
-| v2               | 1.x.x          |
-| v3               | 2.x.x          |
-| v4               | 3.x.x          |
-| v5               | 4.x.x          |
+| Filament Version | Plugin Version  |
+| ---------------- | --------------- |
+| v2               | v1.x.x          |
+| v3               | v2.x.x          |
+| v4.0 – v4.15.1   | v3.0.0 - v3.2.4 |
+| v4.15.2+         | v3.3.0          |
+| v5.0 – v5.10.1   | v4.0.0          |
+| v5.10.2+         | v4.1.x          |
 
 ## Installation
 

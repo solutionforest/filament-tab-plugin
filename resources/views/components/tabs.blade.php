@@ -7,12 +7,15 @@
     $generatedLivewireKey = "{$livewireId}." . Tabs::class . ".container";
 
     $isContained = $isContained();
+    $tabs = $getChildComponentContainer()->getComponents();
 @endphp
 <div
     x-load
     x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('tabs', 'filament/schemas') }}"
     x-data="tabsSchemaComponent({
         activeTab: @js($getActiveTab()),
+        hasTabPanels: @js(true),
+        isScrollable: @js(true),
         isTabPersistedInQueryString: @js($isTabPersistedInQueryString()),
         livewireId: @js($livewireId),
         tab: null,
@@ -50,44 +53,54 @@
         :contained="$isContained"
         :label="$getLabel()"
         :vertical="false"
+        x-ref="tabsHeader"
         x-cloak
-        role="tablist"
     >
-        @foreach ($getChildComponentContainer()->getComponents() as $tab)
-            @php
-                $tabUrl = $tab->getUrl();
-                $tabKey = $tab->getId();
-                $tabBadge = $tab->getBadge();
-                $tabBadgeColor = 'primary';
-                $tabBadgeIconPosition = "right";
-                $tabBadgeIcon = null;
-                $tabBadgeTooltip = null;
-                $tabIconPosition = 'before';
-                $tabIcon = $tab->getIcon();
-                $onClickEvent = filled($tabUrl)
-                    ? ($tab->shouldOpenUrlInNewTab()
-                        ? "window.open('{$tabUrl}', '_blank')"
-                        : "window.location.href='{$tabUrl}'")
-                    : "tab = '{$tabKey}'";
-            @endphp
-            
-            <x-filament::tabs.item
-                :alpine-active="'tab === \'' . $tabKey . '\''"
-                :badge="$tabBadge"
-                :badge-color="$tabBadgeColor"
-                :badge-icon="$tabBadgeIcon"
-                :badge-icon-position="$tabBadgeIconPosition"
-                :badge-tooltip="$tabBadgeTooltip"
-                :icon="$tabIcon"
-                :icon-position="$tabIconPosition"
-                :x-on:click="$onClickEvent"
-            >
-                {{ $tab->getLabel() }}
-            </x-filament::tabs.item>
-        @endforeach
+        <div
+            x-ref="tablist"
+            class="fi-sc-tabs-tablist"
+            x-on:keydown="handleKeydown($event)"
+        >
+            @foreach ($tabs as $tab)
+                @php
+                    $tabUrl = $tab->getUrl();
+                    $tabKey = $tab->getId();
+                    $tabBadge = $tab->getBadge();
+                    $tabBadgeColor = 'primary';
+                    $tabBadgeIconPosition = "right";
+                    $tabBadgeIcon = null;
+                    $tabBadgeTooltip = null;
+                    $tabIconPosition = 'before';
+                    $tabIcon = $tab->getIcon();
+                    $onClickEvent = filled($tabUrl)
+                        ? ($tab->shouldOpenUrlInNewTab()
+                            ? "window.open('{$tabUrl}', '_blank')"
+                            : "window.location.href='{$tabUrl}'")
+                        : "selectTab('{$tabKey}', \$event)";
+                    $tabExtraAttributeBag = $tab->getExtraAttributeBag()->merge([
+                        'data-tab-key' => $tabKey,
+                    ]);
+                @endphp
+                
+                <x-filament::tabs.item
+                    :alpine-active="'tab === \'' . $tabKey . '\''"
+                    :badge="$tabBadge"
+                    :badge-color="$tabBadgeColor"
+                    :badge-icon="$tabBadgeIcon"
+                    :badge-icon-position="$tabBadgeIconPosition"
+                    :badge-tooltip="$tabBadgeTooltip"
+                    :icon="$tabIcon"
+                    :icon-position="$tabIconPosition"
+                    :x-on:click="$onClickEvent"
+                    :attributes="$tabExtraAttributeBag"
+                >
+                    {{ $tab->getLabel() }}
+                </x-filament::tabs.item>
+            @endforeach
+        </div>
     </x-filament::tabs>
 
-    @foreach ($getChildComponentContainer()->getComponents() as $tab)
+    @foreach ($tabs as $tab)
         {{ $tab }}
     @endforeach
 </div>
