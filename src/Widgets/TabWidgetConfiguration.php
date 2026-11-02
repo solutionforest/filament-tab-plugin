@@ -32,7 +32,7 @@ class TabWidgetConfiguration extends WidgetConfiguration
             }
 
             if (! ($item instanceof SimpleTabSchema)) {
-                throw new \InvalidArgumentException('Each tab must be an instance of '.SimpleTabSchema::class.'.');
+                throw new InvalidArgumentException('Each tab must be an instance of '.SimpleTabSchema::class.'.');
             }
 
             $computedTabs[] = $item->toArray();
