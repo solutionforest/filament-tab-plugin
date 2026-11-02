@@ -2,6 +2,26 @@
 
 All notable changes to `tab-layout-plugin` will be documented in this file.
 
+## 3.3.0 - 2026-11-02
+
+<!-- Release notes generated using configuration in .github/release.yml at 3.3.0 -->
+### What's Changed
+
+- Fix translated fields invisible on first load (no tab active) by aligning translate tabs with Filament schemas Alpine API (`hasTabPanels`, `schemaKey`, `tablist`, `selectTab`)
+- Require `filament/filament` `^4.15.2`
+- Document Filament ↔ plugin version matrix in README
+
+#### Other Changes
+
+* Bump actions/checkout from 6 to 7 by @dependabot[bot] in https://github.com/solutionforest/filament-tab-plugin/pull/16
+
+### Compatibility
+
+- Filament **v4.15.2+**
+- For Filament ≤4.15.1, stay on **3.2.4**
+
+**Full Changelog**: https://github.com/solutionforest/filament-tab-plugin/compare/3.2.4...3.3.0
+
 ## 4.0.0 - 2026-02-02
 
 ### v4.0.0 Release
@@ -90,6 +110,7 @@ composer require solution-forest/tab-layout-plugin:^3.2.2
 
 
 
+
 ```
 ## 3.2.1 - 2025-08-11
 
@@ -104,6 +125,7 @@ composer require solution-forest/tab-layout-plugin:^3.2.2
 
 ```bash
 composer require solution-forest/tab-layout-plugin:^3.2.1
+
 
 
 
