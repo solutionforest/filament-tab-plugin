@@ -12,7 +12,6 @@ use Filament\Support\Commands\Exceptions\FailureCommandOutput;
 use Filament\Support\Commands\FileGenerators\Concerns\CanCheckFileGenerationFlags;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use ReflectionClass;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -124,7 +123,7 @@ class MakeTabWidgetCommand extends Command
 
             $this->createTabWidget();
         } catch (FailureCommandOutput) {
-            return static::FAILURE;
+            return self::FAILURE;
         }
 
         $this->components->info("Filament widget [{$this->fqn}] created successfully.");
@@ -135,55 +134,21 @@ class MakeTabWidgetCommand extends Command
             $this->components->info('Make sure to register the widget with [widgets()] or discover it with [discoverWidgets()] in the panel service provider.');
         }
 
-        return static::SUCCESS;
-
-        $path = config('filament.widgets.path', app_path('Filament/Widgets/'));
-        $namespace = config('filament.widgets.namespace', 'App\\Filament\\Widgets');
-
-        $widget = Str::of(
-            strval($this->argument('name') ?? text(
-                label: 'Name',
-                placeholder: '(e.g. `MemberDetails`)',
-                required: true
-            ))
-        )
-            ->trim('/')
-            ->trim('\\')
-            ->trim(' ')
-            ->replace('/', '\\');
-        $widgetClass = (string) Str::of($widget)->afterLast('\\');
-        $widgetNamespace = Str::of($widget)->contains('\\') ?
-            (string) Str::of($widget)->beforeLast('\\') :
-            '';
-
-        $path = (string) Str::of($widget)
-            ->prepend('/')
-            ->prepend($path)
-            ->replace('\\', '/')
-            ->replace('//', '/')
-            ->append('.php');
-
-        if (! $this->option('force') && $this->checkForCollision([$path])) {
-            return static::INVALID;
-        }
-
-        $this->copyStubToApp('TabsWidget', $path, [
-            'class' => $widgetClass,
-            'namespace' => $namespace.($widgetNamespace !== '' ? "\\{$widgetNamespace}" : ''),
-        ]);
-
-        $this->info("Successfully created {$widget}!");
-
-        return static::SUCCESS;
+        return self::SUCCESS;
     }
 
     protected function configureFqnEnd(): void
     {
-        $this->fqnEnd = (string) str($this->argument('name') ?? text(
-            label: 'What is the widget name?',
-            placeholder: '(e.g. `MemberDetails`)',
-            required: true,
-        ))
+        $nameArgument = $this->argument('name');
+        $nameInput = is_string($nameArgument) && $nameArgument !== ''
+            ? $nameArgument
+            : text(
+                label: 'What is the widget name?',
+                placeholder: '(e.g. `MemberDetails`)',
+                required: true,
+            );
+
+        $this->fqnEnd = (string) str($nameInput)
             ->trim('/')
             ->trim('\\')
             ->trim(' ')
@@ -231,9 +196,11 @@ class MakeTabWidgetCommand extends Command
 
         $this->configureResourcesLocation(question: 'Which namespace would you like to search for resources in?');
 
+        $resourceOption = $this->option('resource');
+
         $this->resourceFqn = $this->askForResource(
             question: 'Which resource would you like to create this widget in?',
-            initialResource: $this->option('resource'),
+            initialResource: is_string($resourceOption) ? $resourceOption : null,
         );
 
         $pluralResourceBasenameBeforeResource = (string) str($this->resourceFqn)
@@ -245,11 +212,17 @@ class MakeTabWidgetCommand extends Command
             ->beforeLast('\\')
             ->classBasename();
 
+        $resourceFileName = (new ReflectionClass($this->resourceFqn))->getFileName();
+
+        if ($resourceFileName === false) {
+            throw new FailureCommandOutput;
+        }
+
         if ($pluralResourceBasenameBeforeResource === $resourceNamespacePartBeforeBasename) {
             $this->widgetsNamespace = (string) str($this->resourceFqn)
                 ->beforeLast('\\')
                 ->append('\\Widgets');
-            $this->widgetsDirectory = (string) str((new ReflectionClass($this->resourceFqn))->getFileName())
+            $this->widgetsDirectory = (string) str($resourceFileName)
                 ->beforeLast(DIRECTORY_SEPARATOR)
                 ->append('/Widgets');
 
@@ -257,7 +230,7 @@ class MakeTabWidgetCommand extends Command
         }
 
         $this->widgetsNamespace = "{$this->resourceFqn}\\Widgets";
-        $this->widgetsDirectory = (string) str((new ReflectionClass($this->resourceFqn))->getFileName())
+        $this->widgetsDirectory = (string) str($resourceFileName)
             ->beforeLast('.')
             ->append('/Widgets');
     }
@@ -301,9 +274,9 @@ class MakeTabWidgetCommand extends Command
             $namespaces,
         );
 
-        $this->widgetsNamespace = search(
+        $selectedNamespace = search(
             label: 'Which namespace would you like to create this widget in?',
-            options: function (?string $search) use ($keyedNamespaces): array {
+            options: function (string $search) use ($keyedNamespaces): array {
                 if (blank($search)) {
                     return $keyedNamespaces;
                 }
@@ -313,12 +286,23 @@ class MakeTabWidgetCommand extends Command
                 return array_filter($keyedNamespaces, fn (string $namespace): bool => str($namespace)->replace(['\\', '/'], '')->contains($search, ignoreCase: true));
             },
         );
-        $this->widgetsDirectory = $directories[array_search($this->widgetsNamespace, $namespaces)];
+        if (! is_string($selectedNamespace) || $selectedNamespace === '') {
+            throw new FailureCommandOutput;
+        }
+
+        $this->widgetsNamespace = $selectedNamespace;
+
+        $directoryIndex = array_search($this->widgetsNamespace, $namespaces, true);
+        if ($directoryIndex === false || ! isset($directories[$directoryIndex])) {
+            throw new FailureCommandOutput;
+        }
+
+        $this->widgetsDirectory = $directories[$directoryIndex];
     }
 
     protected function configureLocation(): void
     {
-        $this->fqn = $this->widgetsNamespace.'\\'.$this->fqnEnd;
+        $this->fqn = $this->widgetsNamespace.'\\'.$this->fqnEnd; // @phpstan-ignore assign.propertyType (generated class may not exist yet)
     }
 
     protected function createTabWidget(): void

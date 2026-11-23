@@ -12,7 +12,7 @@ class TabWidgetConfiguration extends WidgetConfiguration
     /**
      * @param  class-string<Widget>  $widget
      * @param  array<string, mixed>  $properties
-     * @param  array<string, mixed>|SimpleTabSchema[]  $tabs
+     * @param  array<int, array<string, mixed>|SimpleTabSchema>  $tabs
      */
     public function __construct(
         string $widget,
@@ -20,15 +20,17 @@ class TabWidgetConfiguration extends WidgetConfiguration
         array $tabs = [],
     ) {
         $computedTabs = [];
+        $propertyTabs = $properties['tabs'] ?? [];
+        $propertyTabComponents = $properties['tabComponents'] ?? [];
 
         foreach (array_merge(
             $tabs,
-            $properties['tabs'] ?? [],
-            $properties['tabComponents'] ?? [],
+            is_array($propertyTabs) ? $propertyTabs : [],
+            is_array($propertyTabComponents) ? $propertyTabComponents : [],
         ) as $item) {
             if (is_array($item)) {
 
-                $item = SimpleTabSchema::parseFormArray($this->ensureSimpleTabSchemaArray($item));
+                $item = SimpleTabSchema::parseFormArray($this->ensureSimpleTabSchemaArray(self::stringKeyedArray($item)));
             }
 
             if (! ($item instanceof SimpleTabSchema)) {
@@ -46,9 +48,9 @@ class TabWidgetConfiguration extends WidgetConfiguration
     }
 
     /**
-     * @param  array | SimpleTabSchema  $tab
+     * @param  array<string, mixed>|SimpleTabSchema  $tab
      */
-    public function tab($tab): static
+    public function tab(array|SimpleTabSchema $tab): static
     {
         $computedTab = null;
         if (is_array($tab)) {
@@ -60,16 +62,25 @@ class TabWidgetConfiguration extends WidgetConfiguration
             $computedTab = $tab->toArray();
 
         } else {
-            throw new InvalidArgumentException('Each tab must be an instance of '.TabWidgetContentConfiguration::class.' or a valid array configuration.');
+            throw new InvalidArgumentException('Each tab must be an instance of '.SimpleTabSchema::class.' or a valid array configuration.');
         }
 
         if ($computedTab) {
-            $this->properties['tabComponents'][] = $computedTab;
+            $existing = $this->properties['tabComponents'] ?? [];
+            if (! is_array($existing)) {
+                $existing = [];
+            }
+            $existing[] = $computedTab;
+            $this->properties['tabComponents'] = $existing;
         }
 
         return $this;
     }
 
+    /**
+     * @param  array<string, mixed>  $item
+     * @return array<string, mixed>
+     */
     private function ensureSimpleTabSchemaArray(array $item): array
     {
         if (! SimpleTabSchema::isValidArray($item)) {
@@ -91,5 +102,22 @@ class TabWidgetConfiguration extends WidgetConfiguration
         }
 
         return $item;
+    }
+
+    /**
+     * @param  array<int|string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    private static function stringKeyedArray(array $data): array
+    {
+        $result = [];
+
+        foreach ($data as $key => $value) {
+            if (is_string($key)) {
+                $result[$key] = $value;
+            }
+        }
+
+        return $result;
     }
 }

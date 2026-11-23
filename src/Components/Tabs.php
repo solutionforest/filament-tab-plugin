@@ -6,6 +6,8 @@ use Closure;
 use Filament\Support\Concerns\CanBeContained;
 use Filament\Support\Concerns\HasExtraAlpineAttributes;
 use Livewire\Component;
+use RuntimeException;
+use SolutionForest\TabLayoutPlugin\Components\Tabs\Tab;
 use SolutionForest\TabLayoutPlugin\Contracts\HasTabs;
 
 class Tabs extends FilamentComponent
@@ -21,14 +23,19 @@ class Tabs extends FilamentComponent
 
     protected ?HasTabs $livewire = null;
 
-    public function __construct($id = null)
+    public function __construct(?string $id = null)
     {
         $this->id($id ?? uniqid());
     }
 
-    public static function make($id = null): static
+    public static function make(?string $id = null): static
     {
         $static = app(static::class, ['id' => $id]);
+
+        if (! $static instanceof static) {
+            throw new RuntimeException(static::class.' could not be resolved from the container.');
+        }
+
         $static->configure();
 
         return $static;
@@ -41,6 +48,9 @@ class Tabs extends FilamentComponent
         return $this;
     }
 
+    /**
+     * @param  array<int|string, mixed>|Closure  $tabs
+     */
     public function tabs(array|Closure $tabs): static
     {
         $this->childComponents($tabs);
@@ -82,20 +92,28 @@ class Tabs extends FilamentComponent
 
             foreach ($this->getChildComponentContainer()->getComponents() as $index => $tab) {
 
+                if (! $tab instanceof Tab) {
+                    continue;
+                }
+
                 if ($tab->getId() !== $queryStringTab) {
                     continue;
                 }
 
-                return $index + 1;
+                return (int) $index + 1;
             }
         }
 
-        return $this->evaluate($this->activeTab);
+        $activeTab = $this->evaluate($this->activeTab);
+
+        return is_int($activeTab) ? $activeTab : 1;
     }
 
     public function getTabQueryStringKey(): ?string
     {
-        return $this->evaluate($this->tabQueryStringKey);
+        $key = $this->evaluate($this->tabQueryStringKey);
+
+        return is_string($key) ? $key : null;
     }
 
     public function isTabPersistedInQueryString(): bool
@@ -110,6 +128,9 @@ class Tabs extends FilamentComponent
         return $this;
     }
 
+    /**
+     * @return array<mixed>
+     */
     protected function resolveDefaultClosureDependencyForEvaluationByName(string $parameterName): array
     {
         return match ($parameterName) {

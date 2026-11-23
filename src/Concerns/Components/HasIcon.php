@@ -18,6 +18,12 @@ trait HasIcon
 
     public function getIcon(): string|BackedEnum|null
     {
-        return $this->evaluate($this->icon);
+        $icon = $this->evaluate($this->icon);
+
+        if (is_string($icon) || $icon instanceof BackedEnum || $icon === null) {
+            return $icon;
+        }
+
+        return null;
     }
 }

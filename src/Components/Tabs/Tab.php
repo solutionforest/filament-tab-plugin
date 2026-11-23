@@ -4,6 +4,7 @@ namespace SolutionForest\TabLayoutPlugin\Components\Tabs;
 
 use Closure;
 use Illuminate\Support\Str;
+use RuntimeException;
 use SolutionForest\TabLayoutPlugin\Components\FilamentComponent;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\BelongsToContainer;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\HasBadge;
@@ -21,7 +22,7 @@ class Tab extends FilamentComponent
 
     protected string|Closure|null $url = null;
 
-    protected ?string $tabId = null;
+    protected string $tabId;
 
     final public function __construct(string $label, ?string $id = null)
     {
@@ -32,6 +33,11 @@ class Tab extends FilamentComponent
     public static function make(string $label, ?string $id = null): static
     {
         $static = app(static::class, ['label' => $label, 'id' => $id]);
+
+        if (! $static instanceof static) {
+            throw new RuntimeException(static::class.' could not be resolved from the container.');
+        }
+
         $static->configure();
 
         return $static;
@@ -61,7 +67,13 @@ class Tab extends FilamentComponent
 
     public function getId(): string
     {
-        return $this->getContainer()->getParentComponent()->getId().'-'.$this->getTabId().'-tab';
+        $parent = $this->getContainer()->getParentComponent();
+
+        if ($parent === null) {
+            throw new RuntimeException('The tab is not attached to a parent component.');
+        }
+
+        return $parent->getId().'-'.$this->getTabId().'-tab';
     }
 
     public function getTabId(): string
@@ -69,6 +81,9 @@ class Tab extends FilamentComponent
         return $this->tabId;
     }
 
+    /**
+     * @return array<string, int|null>
+     */
     public function getColumnsConfig(): array
     {
         return $this->columns ?? $this->getContainer()->getColumnsConfig();
@@ -76,7 +91,9 @@ class Tab extends FilamentComponent
 
     public function getUrl(): ?string
     {
-        return value($this->url);
+        $url = value($this->url);
+
+        return is_string($url) ? $url : null;
     }
 
     public function shouldOpenUrlInNewTab(): bool

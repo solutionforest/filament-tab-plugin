@@ -3,6 +3,7 @@
 namespace SolutionForest\TabLayoutPlugin\Components;
 
 use Filament\Support\Components\ViewComponent;
+use RuntimeException;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\BelongsToParentComponent;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\CanBeHidden;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\HasColumns;
@@ -15,6 +16,9 @@ class ComponentContainer extends ViewComponent
     use HasColumns;
     use HasComponents;
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $meta = [];
 
     protected string $view = 'tab-layout-plugin::components.component-container';
@@ -25,6 +29,12 @@ class ComponentContainer extends ViewComponent
 
     public static function make(): static
     {
-        return app(static::class);
+        $instance = app(static::class);
+
+        if (! $instance instanceof static) {
+            throw new RuntimeException(static::class.' could not be resolved from the container.');
+        }
+
+        return $instance;
     }
 }

@@ -18,16 +18,21 @@ class MakeTabComponent extends Command
 
     public function handle(): int
     {
-        $path = config('tab-layout-plugin.component.path', app_path('Filament/Tabs/Components'));
-        $namespace = config('tab-layout-plugin.component.namespace', 'App\\Filament\\Tabs\\Components');
+        $pathConfig = config('tab-layout-plugin.component.path', app_path('Filament/Tabs/Components'));
+        $namespaceConfig = config('tab-layout-plugin.component.namespace', 'App\\Filament\\Tabs\\Components');
+        $pathPrefix = is_string($pathConfig) ? $pathConfig : app_path('Filament/Tabs/Components');
+        $namespace = is_string($namespaceConfig) ? $namespaceConfig : 'App\\Filament\\Tabs\\Components';
 
-        $name = (string) Str::of(
-            strval($this->argument('name') ?? text(
+        $nameArgument = $this->argument('name');
+        $nameInput = is_string($nameArgument) && $nameArgument !== ''
+            ? $nameArgument
+            : text(
                 label: 'Name',
                 placeholder: '(e.g. `EditProductCategoryPage`)',
                 required: true
-            )),
-        )
+            );
+
+        $name = (string) Str::of($nameInput)
             ->studly()
             ->trim('/')
             ->trim('\\')
@@ -38,7 +43,7 @@ class MakeTabComponent extends Command
             ->prepend('/')
             ->replace('\\', '/')
             ->replace('//', '/')
-            ->prepend($path)
+            ->prepend($pathPrefix)
             ->append('.php');
 
         $class = (string) Str::of($name)
@@ -48,17 +53,20 @@ class MakeTabComponent extends Command
         $classNamespace = Str::beforeLast($class, '\\');
         $className = Str::afterLast($class, '\\');
 
-        $component = (string) Str::of(
-            strval($this->argument('component') ?? text(
+        $componentArgument = $this->argument('component');
+        $componentInput = is_string($componentArgument) && $componentArgument !== ''
+            ? $componentArgument
+            : text(
                 label: 'Component',
                 placeholder: '(e.g. `App\Filament\Resources\ProductCategoryResource\Pages\EditProductCategory`)',
                 required: true
-            ))
-        )
+            );
+
+        $component = (string) Str::of($componentInput)
             ->replace('/', '\\');
 
         if (! $this->option('force') && $this->checkForCollision([$path])) {
-            return static::INVALID;
+            return self::INVALID;
         }
 
         $componentName = Str::afterLast($component, '\\');
@@ -74,6 +82,6 @@ class MakeTabComponent extends Command
 
         $this->info('Make sure to register the component in `schema()` of any SolutionForest\\TabLayoutPlugin\\Components\\Tabs\\Tab.');
 
-        return static::SUCCESS;
+        return self::SUCCESS;
     }
 }

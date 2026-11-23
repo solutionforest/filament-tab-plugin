@@ -3,6 +3,7 @@
 namespace SolutionForest\TabLayoutPlugin\Components\Tabs;
 
 use Filament\Support\Concerns\EvaluatesClosures;
+use RuntimeException;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\CanBeHidden;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\CanSpanColumns;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\HasComponent;
@@ -19,6 +20,10 @@ abstract class TabLayoutComponent
     public static function make(): static
     {
         $static = app(static::class);
+
+        if (! $static instanceof static) {
+            throw new RuntimeException(static::class.' could not be resolved from the container.');
+        }
 
         return $static;
     }

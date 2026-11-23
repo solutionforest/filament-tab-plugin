@@ -17,6 +17,8 @@ trait HasMaxWidth
 
     public function getMaxWidth(): ?string
     {
-        return $this->evaluate($this->maxWidth);
+        $width = $this->evaluate($this->maxWidth);
+
+        return is_string($width) ? $width : null;
     }
 }

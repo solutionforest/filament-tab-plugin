@@ -2,6 +2,7 @@
 
 namespace SolutionForest\TabLayoutPlugin;
 
+use Illuminate\Console\Command;
 use Livewire\Livewire;
 use SolutionForest\TabLayoutPlugin\Commands\MakeTabComponent;
 use SolutionForest\TabLayoutPlugin\Commands\MakeTabWidgetCommand;
@@ -23,6 +24,9 @@ class TabLayoutPluginServiceProvider extends PackageServiceProvider
             ->hasViews();
     }
 
+    /**
+     * @return array<class-string<Command>>
+     */
     protected function getCommands(): array
     {
         return [
@@ -31,7 +35,7 @@ class TabLayoutPluginServiceProvider extends PackageServiceProvider
         ];
     }
 
-    public function bootingPackage()
+    public function bootingPackage(): void
     {
         parent::bootingPackage();
 

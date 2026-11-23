@@ -5,6 +5,7 @@ namespace SolutionForest\TabLayoutPlugin\Schemas\Components;
 use Filament\Support\Concerns\EvaluatesClosures;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component as ViewComponent;
+use RuntimeException;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\CanBeHidden;
 use SolutionForest\TabLayoutPlugin\Concerns\Components\CanSpanColumns;
 
@@ -25,12 +26,16 @@ class TabContentContainer extends ViewComponent
     {
         $static = app(static::class, ['object' => $object]);
 
+        if (! $static instanceof static) {
+            throw new RuntimeException(static::class.' could not be resolved from the container.');
+        }
+
         return $static;
     }
 
     public function render(): View
     {
-        return view('tab-layout-plugin::schemas.components.tab-content-container', [
+        return view('tab-layout-plugin::schemas.components.tab-content-container', [ // @phpstan-ignore argument.type (package view name)
             'object' => $this->object,
         ]);
     }

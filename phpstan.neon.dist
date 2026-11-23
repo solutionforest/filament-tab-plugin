@@ -1,11 +1,16 @@
-includes:
-    - phpstan-baseline.neon
-
 parameters:
-    level: 4
+    level: 10
+    phpVersion: 80200
     paths:
         - src
         - config
+        - phpstan/Fixtures
     tmpDir: build/phpstan
     checkOctaneCompatibility: true
     checkModelProperties: true
+    ignoreErrors:
+        # Filament widgets type $view as view-string but default to a string literal.
+        -
+            identifier: property.defaultValue
+            path: src/Widgets/TabsWidget.php
+            message: '#Property .*\$view \(view-string\) does not accept default value of type string\.#'

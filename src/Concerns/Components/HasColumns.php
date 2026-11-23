@@ -3,11 +3,18 @@
 namespace SolutionForest\TabLayoutPlugin\Concerns\Components;
 
 use SolutionForest\TabLayoutPlugin\Components\ComponentContainer;
+use SolutionForest\TabLayoutPlugin\Components\FilamentComponent;
 
 trait HasColumns
 {
+    /**
+     * @var array<string, int|null>|null
+     */
     protected ?array $columns = null;
 
+    /**
+     * @param  array<string, int|null>|int|null  $columns
+     */
     public function columns(array|int|null $columns = 2): static
     {
         if (! is_array($columns)) {
@@ -21,7 +28,10 @@ trait HasColumns
         return $this;
     }
 
-    public function getColumns($breakpoint = null): array|int|null
+    /**
+     * @return array<string, int|null>|int|null
+     */
+    public function getColumns(int|string|null $breakpoint = null): array|int|null
     {
         $columns = $this->getColumnsConfig();
 
@@ -32,10 +42,17 @@ trait HasColumns
         return $columns;
     }
 
+    /**
+     * @return array<string, int|null>
+     */
     public function getColumnsConfig(): array
     {
-        if ($this instanceof ComponentContainer && $this->getParentComponent()) {
-            return $this->getParentComponent()->getColumnsConfig();
+        if ($this instanceof ComponentContainer) {
+            $parent = $this->getParentComponent();
+
+            if ($parent instanceof FilamentComponent) {
+                return $parent->getColumnsConfig();
+            }
         }
 
         return $this->columns ?? [

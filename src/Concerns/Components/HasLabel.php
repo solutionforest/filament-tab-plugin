@@ -38,13 +38,19 @@ trait HasLabel
     {
         $label = $this->evaluate($this->label);
 
-        return (is_string($label) && $this->shouldTranslateLabel) ?
-            __($label) :
-            $label;
+        if (is_string($label) && $this->shouldTranslateLabel) {
+            return __($label);
+        }
+
+        if (is_string($label) || $label instanceof Htmlable || $label === null) {
+            return $label;
+        }
+
+        return null;
     }
 
     public function isLabelHidden(): bool
     {
-        return $this->evaluate($this->isLabelHidden);
+        return (bool) $this->evaluate($this->isLabelHidden);
     }
 }

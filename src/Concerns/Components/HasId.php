@@ -17,6 +17,8 @@ trait HasId
 
     public function getId(): ?string
     {
-        return $this->evaluate($this->id);
+        $id = $this->evaluate($this->id);
+
+        return is_string($id) ? $id : null;
     }
 }
